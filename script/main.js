@@ -19,7 +19,7 @@ function prueba(){
 }
 prueba();
 
-var dataset = 'script/dataset_small.json';
+var dataset = 'script/assets/dataset_example.json';
 
 $.getJSON(dataset)
     .done(function(response) {//Se escribe el codigo aca adentro, utilizando response object como el contenedor, ya que getJSON es asincronico y no se puede pasar el objecto afuera del json
