@@ -107,7 +107,7 @@ class Scene{
 }
 
 
-$.getJSON('dataset_small.json')
+$.getJSON('script/dataset_small.json')
     .done(function(response) {//Se escribe el codigo aca adentro, utilizando response object como el contenedor, ya que getJSON es asincronico y no se puede pasar el objeto afuera del json
 		var data = response.data;
 		
@@ -129,6 +129,23 @@ $.getJSON('dataset_small.json')
 		
 		sortBlobs();
 		
+		function prueba(){
+			var i,x,y,w,h;
+			w=4;h=3;x=0;y=0;
+			var obj;
+			var bo=new Rectangle(0,0,10,7);
+			var quad=new Quadtree(bo,5);
+			//console.log(quad);
+			for(i=0 ; i<7 ; i++){
+				obj=new Rectangle(x,y,w,h);
+				quad.insert(obj);
+				x=x+2;
+				y++;
+			}
+			console.log(quad);
+			//Sasasasas
+		}
+		prueba();
 	
     }
 	);
