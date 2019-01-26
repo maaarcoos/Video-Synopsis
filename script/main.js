@@ -1,117 +1,114 @@
 console.log("Todo bien1");
 
+let quad;
+let tuplas;
+//Prueba cargar todos los blobs del data example
 
-function prueba(){
-	var i,x,y,w,h;
-	w=4;h=3;x=0;y=0;
-	var obj;
-	var bo=new Rectangle(0,0,10,7);
-	var quad=new Quadtree(bo,1);
-	//console.log(quad);
-	for(i=0 ; i<7 ; i++){
-		obj=new Rectangle(x,y,w,h);
-		quad.insert(obj);
-		x=x+2;
-		y++;
-	}
-	console.log(quad);
+function prueba() {
+  let x, y, w, h;
+  w = Math.random() * 100;
+  h = Math.random() * 50;
+  x = 1;
+  y = 1;
+  let obj;
+  //console.log(quad);
+  //for (let o : blobs) {
+  //  obj = new Rectangle(x, y, w, h);
 
+  //  blobs.push(obj);
+  //  quad.insert(o);
+  //  x = floor(Math.random()*800);
+  //  y = floor(Math.random()*400);
+  //  console.log("x:" + x + " y:" + y);
+  //}
+  //console.log(quad);
 }
-prueba();
 
 var dataset = 'script/assets/dataset_example.json';
-
 $.getJSON(dataset)
-    .done(function(response) {//Se escribe el codigo aca adentro, utilizando response object como el contenedor, ya que getJSON es asincronico y no se puede pasar el objecto afuera del json
-		var data = response.data;
+  .done(function(response) { //Se escribe el codigo aca adentro, utilizando response object como el contenedor, ya que getJSON es asincronico y no se puede pasar el objeto afuera del json
+    let data = response.data;
 
-		function sortBlobs(){
-		var blob;
-		var i;
-		for(i = 0; i < data.length; i++){
-			var j;
-			blob = data[i].lightweight_blobs;
-			blob.sort(function(a,b){//ordena los blobs de cada tracked blob ascendentemente segun la funcion de comparacion
-					return -new Date(b.time) + +new Date(a.time);
-				});
-		}
-		data.sort(function(a,b){//ordena todos los tracked blobs segun el momento que ingresan a la escena
-			return -new Date(b.init) + +new Date(a.init);
-		});
+    //Ordenar los blobs en orden ascendente
+    function sortBlobs() {
+      let blob;
+      for (let i = 0; i < data.length; i++) {
+        let j;
+        blob = data[i].lightweight_blobs;
+        blob.sort(function(a, b) { //ordena los blobs de cada tracked blob ascendentemente segun la funcion de comparacion
+          return -new Date(b.time) + +new Date(a.time);
+        });
+      }
+      data.sort(function(a, b) { //ordena todos los tracked blobs segun el momento que ingresan a la escena
+        return -new Date(b.init) + +new Date(a.init);
+      });
 
-		}
-		sortBlobs();
-		//console.log(data);
+    }
+    sortBlobs();
 
-		/*
+    function listById(dataset) {
+      let blobs = new Array();
+      for (b of data) {
+        let tblob = new Tuple(b, new Date(0, 0, 0, 0, 0));
+        blobs.push(tblob);
+        console.log(tblob);
+      }
+      console.log(blobs[1]);
+    }
 
+    function loadBlobs(tblob) {
+      //Carga en Blob cada blob detectado de un objeto
+      let blobs = new Array();
+      for (let i = 0; i < data[tblob].lightweight_blobs.length; i++) {
 
-		//Luego de ordenar, empieza el codigo llamando a las clases y todo hecho fuera
-		var scenesList = new Array();
-		var time= new Date(0,0,0,0,0);//time inicializado en 00:00:00
+        let objCenter = data[tblob].lightweight_blobs[i]['centroid'];
+        //console.log(objCenter + " " +i);
+        let cornerCoord = JSON.parse(objCenter); //necesito convertir el json a un objeto de Javascript
+        let tracked_blob_id = JSON.stringify(data[tblob].lightweight_blobs[i].tracked_blob_id);
+        let width = parseFloat(data[tblob].lightweight_blobs[i].width); //parse convierte un string al tipo que queramos
+        let height = parseFloat(data[tblob].lightweight_blobs[i].height); //por ejemplo, parseFloat lo pasa a float
+        let time = new Date(data[tblob].lightweight_blobs[i].time);
+        //console.log(time);
+        let bl = new Blob(cornerCoord.x, cornerCoord.y, width, height, tracked_blob_id, time); //{tracked_blob_id,width,height,time,cornerCoord};
 
-		function insertInScene(obj){
-			if(scenesList.length == 0){//Si es la primer Escena
-					var scene= new Scene(20,800,480,time);
+        if (blobs.length == 0) {
+          blobs.push(new Tuple(bl, 0));
+        } else {
+          let ntime = bl.time - blobs[0].blob.time;
+          blobs.push(new Tuple(bl, ntime));
+        }
+      }
+      //console.log(blobs);
+      //trackedBlobs.push(blobs);
+      //console.log(trackedBlobs);
+      return blobs;
+    }
 
-			}
-			else{//Si hay mas escenas
-				var i;
-				for(i=0;i<scenesList.length;i++){
-
-				}
-			}
-
-
-
-		}
-
-		var i;
-		var blobs;
-		for(i = 0; i < data.length; i++){
-			var j;
-			blobs=data[i].lightweight_blobs;
-			for(j=0 ; j < blobs.length ; j++){
-				insertInScene(blobs[j]);
-			}
-		}
-		*/
-
-
-
-		//var FinalList = new Array();
-		var time = new Date(0,0,0,0,0);
-		var i;
-		var blob;
-		var blobsList = new Array();
-		for(i = 0;i<data.length;i++){
-			var j;
-			var trackblobs;
-
-			blob=new Tuple(data[i], time);
-
-				//cambia tiempo de cada tracked blob
-			if(blobsList.length == 0){
-				blobsList.push(blob);
-				//blob=new Tuple(data[i], blobsList[blobsList.length - 1].time);
-
-			}
-			else {
-				blob=new Tuple(data[i], blobsList[blobsList.length - 1].time);
-				//console.log(blobsList[blobsList.length - 1]);
-				blob.setTime(10000 + blob.time.getMilliseconds());
-				blobsList.push(blob);
-				console.log(blobsList[blobsList.length - 1]);
-			}
-
-			}
-
-			console.log(blobsList[2].time);
-
-
-
-
-
-	}
-
-	);
+    function dateTest() { //funcion para jugar con el objeto Date, ver como funciona y eso
+      let i;
+      let blob;
+      let blobsList = new Array();
+      let time = new Date(0, 0, 0, 0, 0);
+      for (let i = 0; i < data.length; i++) {
+        blob = new Tuple(data[i], time);
+        //cambia tiempo de cada tracked blob
+        if (blobsList.length == 0) {
+          blobsList.push(blob);
+        } else {
+          blob = new Tuple(data[i], new Date(blobsList[blobsList.length - 1].time));
+          //console.log("Antes de setear: " + blobsList[blobsList.length - 1]);
+          blob.setTime(10000 + blob.time.getMilliseconds());
+          blobsList.push(blob);
+          console.log(blobsList[blobsList.length - 1]);
+        }
+      }
+      console.log("Hora: " + blobsList[3].time);
+      console.log(blobsList[2].time);
+    }
+    //datetest();
+    tuplas = loadBlobs(0);
+    console.log(tuplas);
+    console.log(tuplas[0].blob.time.getSeconds() + " " +tuplas[1].blob.time.getSeconds() + " " + tuplas[2].blob.time.getSeconds() + " " + tuplas[3].blob.time.getSeconds())
+    console.log(tuplas[1].blob.percentx + " " + tuplas[1].blob.percenty + "|| " + tuplas[2].blob.percentx + " " + tuplas[2].blob.percenty + "|| " + tuplas[3].blob.percentx + " " + tuplas[3].blob.percenty)
+    console.log(tuplas[1].similarTime(tuplas[2],1000));
+  });

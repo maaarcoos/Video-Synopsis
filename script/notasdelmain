@@ -1,0 +1,28 @@
+//console.log(data);
+/*
+
+//Luego de ordenar, empieza el codigo llamando a las clases y todo hecho fuera
+var scenesList = new Array();
+var time= new Date(0,0,0,0,0);//time inicializado en 00:00:00
+
+function insertInScene(obj){
+  if(scenesList.length == 0){//Si es la primer Escena
+      var scene= new Scene(20,800,480,time);
+  }
+  else{//Si hay mas escenas
+    var i;
+    for(i=0;i<scenesList.length;i++){
+    }
+  }
+}
+var i;
+var blobs;
+for(i = 0; i < data.length; i++){
+  var j;
+  blobs=data[i].lightweight_blobs;
+  for(j=0 ; j < blobs.length ; j++){
+    insertInScene(blobs[j]);
+  }
+}
+*/
+//var FinalList = new Array();
