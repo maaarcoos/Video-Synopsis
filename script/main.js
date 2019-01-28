@@ -45,6 +45,7 @@ $.getJSON(dataset)
 
     }
     sortBlobs();
+	console.log(data[0]);
 
     function listById(dataset) {
       let blobs = new Array();
@@ -70,7 +71,8 @@ $.getJSON(dataset)
         let time = new Date(data[tblob].lightweight_blobs[i].time);
         //console.log(time);
         let bl = new Blob(cornerCoord.x, cornerCoord.y, width, height, tracked_blob_id, time); //{tracked_blob_id,width,height,time,cornerCoord};
-
+		
+		
         if (blobs.length == 0) {
           blobs.push(new Tuple(bl, 0));
         } else {
