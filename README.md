@@ -8,6 +8,10 @@ porcentuales, que son los que vienen en el dataset. Para usarlo previamente hay 
 cargarle width y height, para ajustar el blob al tamaño del background.-->inBackground()
 Tambien le agrega un id y el tiempo real en el que fue detectado.
 
+-Es importante que antes de poner un blob en el quadtree lo ubiquemos en un fondo,
+para eso esta el metodo inBackground. Esto se debe a que los blobs vienen en
+medidas porcentuales.
+
 -Tuple ahora tiene el metodo isSimilar(obj,margin) que se fija si 2 blobs transcurren
 al mismo tiempo, o si hay un margen de diferencia que hagan que esten muy cerca
 uno del otro.

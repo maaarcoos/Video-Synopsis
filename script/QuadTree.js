@@ -1,5 +1,5 @@
 class Tuple {
-  constructor(blob, time,id) { //time debe ser de tipo date - blob contiene el blob en cuestion
+  constructor(blob, time) { //time debe ser de tipo date - blob contiene el blob en cuestion
     this.blob = blob;
     this.time = time;
 
@@ -7,32 +7,44 @@ class Tuple {
   setTime(milis) {
     this.time.setMilliseconds(milis);
   }
-  similarTime(obj,margin){
-    return (this.time == obj.time
-      || this.time-margin<= obj.time && this.time > obj.time
-      || this.time<= obj.time && this.time+margin > obj.time);
+  similarTime(obj, margin) {
+    return (this.time == obj.time ||
+      this.time - margin <= obj.time && this.time > obj.time ||
+      this.time <= obj.time && this.time + margin > obj.time);
+  }
+  getX() {
+    return this.blob.x;
+  }
+  getY() {
+    return this.blob.y;
+  }
+  getHeigth() {
+    return this.blob.heigth;
+  }
+  getWidth() {
+    return this.blob.width;
   }
 }
 
 
 class Rectangle { //el primero se inicializara con (0,0,800,400)
   constructor(x, y, w, h) { //Javascript soporta parametros faltantes en el llamado
-    this.x = x;                      // al constructor
+    this.x = x; // al constructor
     this.y = y;
     this.width = w;
     this.height = h;
   }
 
-  x() {
+  getX() {
     return this.x;
   }
-  y() {
+  getY() {
     return this.y;
   }
-  width() {
+  getWidth() {
     return this.width;
   }
-  height() {
+  getHeight() {
     return this.height;
   }
   setX(newx) {
@@ -48,15 +60,15 @@ class Rectangle { //el primero se inicializara con (0,0,800,400)
     this.height = newH;
   }
   contains(obj) { //contiene al menos la mitad del objeto en cuestion
-    return ((obj.x + (obj.width) / 2 <= this.x + this.width) &&
-      (obj.y + (obj.height) / 2 <= this.y + this.height) &&
-      (obj.x + (obj.width) / 2 >= this.x - this.width) &&
-      (obj.y + (obj.height) / 2 >= this.y - this.height));
+    return ((obj.getX() + (obj.getWidth()) / 2 <= this.x + this.width) &&
+      (obj.getY() + (obj.getHeight()) / 2 <= this.y + this.height) &&
+      (obj.getX() + (obj.getWidth()) / 2 >= this.x - this.width) &&
+      (obj.getY() + (obj.getHeight()) / 2 >= this.y - this.height));
   }
 }
 
 class Blob {
-  constructor(x, y, w,h, id, time) {
+  constructor(x, y, w, h, id, time) {
     this.percentx = x;
     this.x = null;
     this.percenty = y;
@@ -69,17 +81,17 @@ class Blob {
     this.time = time;
   }
 
-  inBackground(width, heigth){
-    this.width = width/this.percentwidth;
-    this.heigth = heigth/this.percentheigth;
-    this.x = width/this.percentx;
-    this.y = heigth/this.percenty;
+  inBackground(width, heigth) {
+    this.width = width * this.percentwidth / 100;
+    this.heigth = heigth * this.percentheigth / 100;
+    this.x = width * this.percentx / 100;
+    this.y = heigth * this.percenty / 100;
   }
-  contains(obj) { //contiene al menos la mitad del objeto en cuestion
-    return ((obj.x + (obj.width) / 2 <= this.x + this.width) &&
-      (obj.y + (obj.height) / 2 <= this.y + this.height) &&
-      (obj.x + (obj.width) / 2 >= this.x - this.width) &&
-      (obj.y + (obj.height) / 2 >= this.y - this.height));
+  overlap(obj) { //contiene al menos un cuarto de
+    return ((obj.x + (obj.width) / 4 <= this.x + this.width) &&
+      (obj.y + (obj.height) / 4 <= this.y + this.height) &&
+      (obj.x + (obj.width) / 4 >= this.x - this.width) &&
+      (obj.y + (obj.height) / 4 >= this.y - this.height));
   }
 }
 
@@ -97,33 +109,42 @@ class Quadtree {
     let y = this.bounds.y;
 
     this.child0 =
-    new Quadtree(new Rectangle(x, y, subWidth, subHeight), this.maxObjects); //hijo0
+      new Quadtree(new Rectangle(x, y, subWidth, subHeight), this.maxObjects); //hijo0
     this.child1 =
-    new Quadtree(new Rectangle(x + subWidth, y, subWidth, subHeight), this.maxObjects); //hijo1
+      new Quadtree(new Rectangle(x + subWidth, y, subWidth, subHeight), this.maxObjects); //hijo1
     this.child2 =
-    new Quadtree(new Rectangle(x, y + subHeight, subWidth, subHeight), this.maxObjects); //hijo2
+      new Quadtree(new Rectangle(x, y + subHeight, subWidth, subHeight), this.maxObjects); //hijo2
     this.child3 =
-    new Quadtree(new Rectangle(x + subWidth, y + subHeight, subWidth, subHeight), this.maxObjects); //hijo3
+      new Quadtree(new Rectangle(x + subWidth, y + subHeight, subWidth, subHeight), this.maxObjects); //hijo3
     this.splited = true;
   }
 
   retrieve() {
     while (this.objects.length != 0) {
       let obj = this.objects.pop();
-      if (this.child0.insert(obj)) {}
-      else if (this.child1.insert(obj)) {}
-      else if (this.child2.insert(obj)) {}
-      else if (this.child3.insert(obj)) {}
+      if (this.child0.insert(obj)) {} else if (this.child1.insert(obj)) {} else if (this.child2.insert(obj)) {} else if (this.child3.insert(obj)) {}
     }
   }
 
+  collide(obj) {
+    for (let i = 0;i<this.objects.length;i++) {
+      if (obj.contains(this.objects[i]) &&
+       obj.similarTime(this.objects[i]) &&
+       obj.getId() =! this.objects[i].getId()) {
+        console.log("Colision entre " + obj + " y " + this.objects[i]);
+        console.log("X: "+obj.getX()+ " Y: "obj.getY()+" Width: "+obj.getWidth()+" Heigth: "+obj.getHeigth());
+        return true;
+      }
+    }
+    return false;
+  }
 
   insert(obj) {
-
     if (!this.bounds.contains(obj)) { //Si no lo puede contener al objeto por lo limites, retorna false
       return false;
     } else {
       if (this.objects.length < this.maxObjects && !this.splited) { //Si la cantidad de objetos no excede la cantidad maxima permitida de objetos, inserta y ademas si aun no esta dividido
+        this.collide(obj);
         this.objects.push(obj);
         return true;
       } else {
@@ -148,7 +169,7 @@ class Quadtree {
       }
     }
   }
-  getNeighbors(){
+  getNeighbors() {
     return this.objects;
   }
 }
