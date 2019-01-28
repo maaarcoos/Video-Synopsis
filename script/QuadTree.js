@@ -9,16 +9,12 @@ class TrackedBlob{
 }
 
 
-
 class Tuple {
   constructor(blob, time) { //time debe ser de tipo date - blob contiene el blob en cuestion
     this.blob = blob;
     this.time = time;
 
-  }/*
-  setTime(milis) {
-    this.time.setMilliseconds(milis);
-  }*/
+  }
   similarTime(obj,margin){
     return (this.time == obj.time
       || this.time-margin<= obj.time && this.time > obj.time
@@ -76,19 +72,12 @@ class Blob {
     this.id = id;
     this.time = time;
   }
-/*
-  inBackground(width, heigth){
-	this.width = width * this.percentwidth / 100;
-	this.heigth = heigth * this.percentheigth / 100;
-	this.x = width * this.percentx / 100;
-	this.y = heigth * this.percenty / 100;
-  }
-  */
-  overlap(obj) { //contiene al menos la mitad del objeto en cuestion
-    return ((obj.x + (obj.width) / 4 < this.x + this.width) &&
-      (obj.y + (obj.height) / 4 < this.y + this.height) &&
-      (obj.x + (obj.width) / 4 > this.x - this.width) &&
-      (obj.y + (obj.height) / 4 > this.y - this.height));
+
+  overlap(obj) { //se fija si se solapan al menos en un cuarto
+    return ((obj.x + (obj.width) / 4 <= this.x + this.width) &&
+      (obj.y + (obj.height) / 4 <= this.y + this.height) &&
+      (obj.x + (obj.width) / 4 >= this.x - this.width) &&
+      (obj.y + (obj.height) / 4 >= this.y - this.height));
   }
 }
 
