@@ -1,9 +1,21 @@
+class TrackedBlob{
+	constructor(blobs,delay){
+		this.delay = delay;
+		this.blobs=blobs;
+	}
+	getTimeIndex(index){
+		return blobs[index].time + delay;
+	}
+}
+
+
+
 class Tuple {
   constructor(blob, time) { //time debe ser de tipo date - blob contiene el blob en cuestion
     this.blob = blob;
     this.time = time;
 
-  }
+  }/*
   setTime(milis) {
     this.time.setMilliseconds(milis);
   }
@@ -23,6 +35,11 @@ class Tuple {
   }
   getWidth() {
     return this.blob.width;
+  }*/
+  similarTime(obj,margin){
+    return (this.time == obj.time
+      || this.time-margin<= obj.time && this.time > obj.time
+      || this.time<= obj.time && this.time+margin > obj.time);
   }
 }
 
@@ -68,30 +85,28 @@ class Rectangle { //el primero se inicializara con (0,0,800,400)
 }
 
 class Blob {
-  constructor(x, y, w, h, id, time) {
-    this.percentx = x;
-    this.x = null;
-    this.percenty = y;
-    this.y = null;
-    this.percentwidth = w;
-    this.width = null;
-    this.percentheight = h;
-    this.height = null;
+
+  constructor(x, y, w,h, id, time, resWidth, resHeigth) {
+    this.x = resWidth * x / 100;
+    this.y = resHeigth * y / 100;
+    this.width = resWidth * w / 100;
+    this.heigth = resHeigth * h / 100;
     this.id = id;
     this.time = time;
   }
-
-  inBackground(width, heigth) {
-    this.width = width * this.percentwidth / 100;
-    this.heigth = heigth * this.percentheigth / 100;
-    this.x = width * this.percentx / 100;
-    this.y = heigth * this.percenty / 100;
+/*
+  inBackground(width, heigth){
+	this.width = width * this.percentwidth / 100;
+	this.heigth = heigth * this.percentheigth / 100;
+	this.x = width * this.percentx / 100;
+	this.y = heigth * this.percenty / 100;
   }
-  overlap(obj) { //contiene al menos un cuarto de
-    return ((obj.x + (obj.width) / 4 <= this.x + this.width) &&
-      (obj.y + (obj.height) / 4 <= this.y + this.height) &&
-      (obj.x + (obj.width) / 4 >= this.x - this.width) &&
-      (obj.y + (obj.height) / 4 >= this.y - this.height));
+  */
+  overlap(obj) { //contiene al menos la mitad del objeto en cuestion
+    return ((obj.x + (obj.width) / 4 < this.x + this.width) &&
+      (obj.y + (obj.height) / 4 < this.y + this.height) &&
+      (obj.x + (obj.width) / 4 > this.x - this.width) &&
+      (obj.y + (obj.height) / 4 > this.y - this.height));
   }
 }
 
