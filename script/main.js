@@ -108,6 +108,8 @@ $.getJSON(dataset)
       console.log(blobsList[2].time);
     }
     //datetest();
+
+
     tuplas = loadBlobs(0);
     console.log(tuplas);
     console.log(tuplas[0].blob.time.getSeconds() + " " +tuplas[1].blob.time.getSeconds() + " " + tuplas[2].blob.time.getSeconds() + " " + tuplas[3].blob.time.getSeconds())
