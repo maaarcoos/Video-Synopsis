@@ -24,7 +24,7 @@ function prueba() {
   //console.log(quad);
 }
 
-var dataset = 'script/assets/dataset_example.json';
+var dataset = 'script/assets/dataset_small.json';
 $.getJSON(dataset)
   .done(function(response) { //Se escribe el codigo aca adentro, utilizando response object como el contenedor, ya que getJSON es asincronico y no se puede pasar el objeto afuera del json
     let data = response.data;
@@ -112,7 +112,8 @@ $.getJSON(dataset)
       let scenetest = new Scene(20, 800, 400, 0);
       for (let i = 0; i < data.length; i++) {
         tuplas = loadBlobs(i);
-        scenetest.objects.push(tuplas);
+        tblob = new TrackedBlob(tuplas,0);
+        scenetest.insert(tblob);
       }
       return scenetest;
     }
