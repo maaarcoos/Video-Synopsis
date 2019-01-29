@@ -70,8 +70,8 @@ $.getJSON(dataset)
         let time = new Date(data[tblob].lightweight_blobs[i].time);
         //console.log(time);
         let bl = new Frame(cornerCoord.x, cornerCoord.y, width, height, tracked_blob_id, time, 800, 400); //{tracked_blob_id,width,height,time,cornerCoord};
-		
-		
+
+
         if (blobs.length == 0) {
           blobs.push(new Tuple(bl, 0));
         } else {
@@ -108,13 +108,6 @@ $.getJSON(dataset)
     }
     //datetest();
 
-
-    tuplas = loadBlobs(0);
-    console.log(tuplas);
-    console.log(tuplas[0].blob.time.getSeconds() + " " +tuplas[1].blob.time.getSeconds() + " " + tuplas[2].blob.time.getSeconds() + " " + tuplas[3].blob.time.getSeconds())
-    console.log(tuplas[1].blob.x + " " + tuplas[1].blob.y + "|| " + tuplas[5].blob.x + " " + tuplas[5].blob.y + "|| " + tuplas[3].blob.x + " " + tuplas[3].blob.y)
-    console.log(tuplas[1].similarTime(tuplas[2],1000));
-	
 	function loadScene() {
       let scenetest = new Scene(20, 800, 400, 0);
       for (let i = 0; i < data.length; i++) {
@@ -123,5 +116,6 @@ $.getJSON(dataset)
       }
       return scenetest;
     }
-  
+  let otraprueba = loadScene();
+  console.log(otraprueba);
   });

@@ -128,9 +128,9 @@ class Quadtree {
   retrieve() {
     while (this.objects.length != 0) {
       let obj = this.objects.pop();
-      if (this.child0.insert(obj)) {} 
-	  else if (this.child1.insert(obj)) {} 
-	  else if (this.child2.insert(obj)) {} 
+      if (this.child0.insert(obj)) {}
+	  else if (this.child1.insert(obj)) {}
+	  else if (this.child2.insert(obj)) {}
 	  else if (this.child3.insert(obj)) {}
     }
   }
@@ -154,7 +154,7 @@ class Quadtree {
     } else {
       if (this.objects.length < this.maxObjects && !this.splited) { //Si la cantidad de objetos no excede la cantidad maxima permitida de objetos, inserta y ademas si aun no esta dividido
 				if(this.collide(obj))
-				{	
+				{
 					obj.collision=true;
 				}
 				else{
@@ -191,8 +191,8 @@ class Quadtree {
 class Scene {
   constructor(objMax, widthMax, hightMax, timeInit) {
     this.objMax = objMax;
-    this.bounds = new Reactangle(0, 0, widthMax, hightMax);
-    this.quadtree = new Quadtree(bounds, objMax / 4);
+    this.bounds = new Rectangle(0, 0, widthMax, hightMax);
+    this.quadtree = new Quadtree(this.bounds, objMax / 4);
     this.timeInit = timeInit;
     this.timeLimit;
     this.objects = new Array();
@@ -206,7 +206,7 @@ class Scene {
   timeLimit() {
     return timeLimit;
   }
-  
+
   insert(tb) {
     if (objects.length < ObjMax) {
 		let i=0;
@@ -222,16 +222,15 @@ class Scene {
 				tb.setDelay(100);
 				i=0;
 			}
-			else 
+			else
 			{
 				i++;
 			}
 		}
-			
-		this.objects.push(tb);	
+
+		this.objects.push(tb);
 		return true;
 	}
 	else return false;//Devuelve si la cantidad de objetos excede la capacidad de la escena
   }
 }
-
