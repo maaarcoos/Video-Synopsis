@@ -33,7 +33,6 @@ $.getJSON(dataset)
     function sortBlobs() {
       let blob;
       for (let i = 0; i < data.length; i++) {
-        let j;
         blob = data[i].lightweight_blobs;
         blob.sort(function(a, b) { //ordena los blobs de cada tracked blob ascendentemente segun la funcion de comparacion
           return -new Date(b.time) + +new Date(a.time);
@@ -70,7 +69,7 @@ $.getJSON(dataset)
         let height = parseFloat(data[tblob].lightweight_blobs[i].height); //por ejemplo, parseFloat lo pasa a float
         let time = new Date(data[tblob].lightweight_blobs[i].time);
         //console.log(time);
-        let bl = new Blob(cornerCoord.x, cornerCoord.y, width, height, tracked_blob_id, time); //{tracked_blob_id,width,height,time,cornerCoord};
+        let bl = new Frame(cornerCoord.x, cornerCoord.y, width, height, tracked_blob_id, time, 800, 400); //{tracked_blob_id,width,height,time,cornerCoord};
 		
 		
         if (blobs.length == 0) {
@@ -108,9 +107,21 @@ $.getJSON(dataset)
       console.log(blobsList[2].time);
     }
     //datetest();
+
+
     tuplas = loadBlobs(0);
     console.log(tuplas);
     console.log(tuplas[0].blob.time.getSeconds() + " " +tuplas[1].blob.time.getSeconds() + " " + tuplas[2].blob.time.getSeconds() + " " + tuplas[3].blob.time.getSeconds())
-    console.log(tuplas[1].blob.percentx + " " + tuplas[1].blob.percenty + "|| " + tuplas[2].blob.percentx + " " + tuplas[2].blob.percenty + "|| " + tuplas[3].blob.percentx + " " + tuplas[3].blob.percenty)
+    console.log(tuplas[1].blob.x + " " + tuplas[1].blob.y + "|| " + tuplas[5].blob.x + " " + tuplas[5].blob.y + "|| " + tuplas[3].blob.x + " " + tuplas[3].blob.y)
     console.log(tuplas[1].similarTime(tuplas[2],1000));
+	
+	function loadScene() {
+      let scenetest = new Scene(20, 800, 400, 0);
+      for (let i = 0; i < data.length; i++) {
+        tuplas = loadBlobs(i);
+        scenetest.objects.push(tuplas);
+      }
+      return scenetest;
+    }
+  
   });

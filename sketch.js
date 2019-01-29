@@ -1,4 +1,4 @@
-let color = 255;
+/*let color = 255;
 let i = 0;
 let width = 800
 let heigth = 400
@@ -8,7 +8,7 @@ function setup() {
   background(0);
   let bo = new Rectangle(0, 0, 800, 400);
   //let blobs = new Array();
-  quad = new Quadtree(bo, 10);
+  quad = new Quadtree(bo, 2);
   //console.log(tuplas);
   //  console.log("cat");
   //console.log(quad);
@@ -17,6 +17,7 @@ function setup() {
 function draw() {
   //Draw the quadtree
   show(quad, 0);
+
 }
 
 function show(quadtree, level) {
@@ -36,7 +37,7 @@ function show(quadtree, level) {
 
 function mousePressed() {
   console.clear();
-  for (let j = mouseX; j < width; j += 20) {
+  for (let j = mouseX; j < width; j += 50) {
     nrect = new Rectangle(j, mouseY + Math.random() * 10, 40, 50);
     quad.insert(nrect);
     stroke(255, 0, 0);
@@ -51,3 +52,4 @@ function mousePressed() {
   i++;
 
 }
+*/
