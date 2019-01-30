@@ -1,7 +1,7 @@
 class TrackedBlob {
   constructor(blobs, delay) {
     this.delay = delay;
-    this.blobs = blobs;//Se le pasa una lista de blobs
+    this.blobs = blobs; //Se le pasa una lista de blobs
   }
   getTimeIndex(index) {
     return this.blobs[index].time + this.delay;
@@ -94,9 +94,9 @@ class Frame {
   }
 
   overlap(obj) { //se fija si se solapan al menos en un cuarto de cada uno
-		//console.log(obj);
-		//console.log(this);
-		return ((obj.blob.x + (obj.blob.width) / 4 <= this.x + this.width) &&
+    //console.log(obj);
+    //console.log(this);
+    return ((obj.blob.x + (obj.blob.width) / 4 <= this.x + this.width) &&
       (obj.blob.y + (obj.blob.heigth) / 4 <= this.y + this.heigth) &&
       (obj.blob.x + (obj.blob.width) / 4 >= this.x - this.width) &&
       (obj.blob.y + (obj.blob.heigth) / 4 >= this.y - this.heigth));
@@ -131,22 +131,20 @@ class Quadtree {
   retrieve() {
     while (this.objects.length != 0) {
       let obj = this.objects.pop();
-      if (this.child0.insert(obj)) {} 
-	  else if (this.child1.insert(obj)) {} 
-	  else if (this.child2.insert(obj)) {} 
-	  else if (this.child3.insert(obj)) {}
+      if (this.child0.insert(obj)) {} else if (this.child1.insert(obj)) {} else if (this.child2.insert(obj)) {} else if (this.child3.insert(obj)) {}
     }
   }
 
   collide(obj) {
-	  let i=0;
-    for(let i=0;i < this.objects.length;i++) {
-		if(obj.blob.overlap(this.objects[i]) && obj.similarTime(this.objects[i], 100) && obj.blob.id != this.objects[i].blob.id){
-			return true;
-		}
+    for (let i = 0; i < this.objects.length; i++) {
+      if (obj.blob.overlap(this.objects[i]) &&
+        obj.similarTime(this.objects[i], 100) &&
+        obj.blob.id != this.objects[i].blob.id) {
+        return true;
       }
+    }
 
-	return false;
+    return false;
   }
 
   insert(obj) {
@@ -182,28 +180,31 @@ class Quadtree {
       }
     }
   }
-  
-  drop(obj){
-	if (!this.bounds.contains(obj)){//Si no lo podria contener, no se fija de sacarlo
-		return false;
-	}
-	else
-		if(this.splited){//Si esta dividido, lo busca por sus hijos
-			if(this.child0.drop(obj)){return true}
-			else if(this.child1.drop(obj)){return true}
-			else if(this.child2.drop(obj)){return true}
-			else if(this.child3.drop(obj)){return true}
-		}
-		else{//Si no esta dividido y lo puede contener, lo elimina
-			let i=0;
-			while(i<this.objects.length && this.objects[i].blob.id != obj.blob.id){
-				i++;
-			}
-			this.objects.splice(i,1);
-			return true;
-		}
+
+  drop(obj) {
+    if (!this.bounds.contains(obj)) { //Si no lo podria contener, no se fija de sacarlo
+      return false;
+    } else
+    if (this.splited) { //Si esta dividido, lo busca por sus hijos
+      if (this.child0.drop(obj)) {
+        return true
+      } else if (this.child1.drop(obj)) {
+        return true
+      } else if (this.child2.drop(obj)) {
+        return true
+      } else if (this.child3.drop(obj)) {
+        return true
+      }
+    } else { //Si no esta dividido y lo puede contener, lo elimina
+      let i = 0;
+      while (i < this.objects.length && this.objects[i].blob.id != obj.blob.id) {
+        i++;
+      }
+      this.objects.splice(i, 1);
+      return true;
+    }
   }
-  
+
   getNeighbors() {
     return this.objects;
   }
@@ -216,7 +217,7 @@ class Scene {
     this.quadtree = new Quadtree(this.bounds, objMax / 4);
     this.timeInit = timeInit;
     this.timeLimit;
-    this.objects = new Array();
+    this.objects = new Array(); //arreglo de tracked blobs
   }
   objMax() {
     return this.objMax;
@@ -229,27 +230,37 @@ class Scene {
   }
 
   insert(tb) {
-       let i = 0;
-      while ((this.objects.length < this.objMax) && i < tb.blobs.length) {
-        tb.blobs[i].setTime(tb.delay);
-        this.quadtree.insert(tb.blobs[i]);
-        if (tb.blobs[i].collision) { //al insert en el quadtree hay que agregar si hay o no colision
-          let j = i;
-          while (j >= 0) {
-			this.quadtree.drop(tb.blobs[j]);
-			let x = (tb.blobs[j].time - tb.delay);
-            tb.blobs[j].setTime(x);
-            j--;
-          }
-          tb.setDelay(100);
-          i = 0;
-        } else {
-          i++;
+    let i = 0;
+    while ((this.objects.length < this.objMax) && i < tb.blobs.length) {
+      tb.blobs[i].setTime(tb.delay);
+      this.quadtree.insert(tb.blobs[i]);
+      if (tb.blobs[i].collision) { //al insert en el quadtree hay que agregar si hay o no colision
+        let j = i;
+        while (j >= 0) {
+          this.quadtree.drop(tb.blobs[j]);
+          let x = (tb.blobs[j].time - tb.delay);
+          tb.blobs[j].setTime(x);
+          j--;
         }
-      
+        tb.setDelay(100);
+        i = 0;
+      } else {
+        i++;
+      }
 
-		this.objects.push(tb);
-		return true;}
-     return false; //Devuelve si la cantidad de objetos excede la capacidad de la escena
+
+      this.objects.push(tb);
+      return true;
+    }
+    return false; //Devuelve si la cantidad de objetos excede la capacidad de la escena
+  }
+  getSceneTime() { //Devuelve la duracion maxima de la escena
+    let maxtime = 0;
+    for (let i = 0; i < this.objects.length; i++) {
+      if (this.objects[i].getTimeIndex(this.objects[i].blobs.length - 1) > maxtime) {
+        maxtime = this.objects[i].getTimeIndex(this.objects[i].blobs.length - 1);
+      }
+    }
+    return maxtime;
   }
 }

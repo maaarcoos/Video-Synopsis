@@ -24,7 +24,7 @@ function prueba() {
   //console.log(quad);
 }
 
-var dataset = 'script/assets/dataset_small.json';
+var dataset = 'script/assets/dataset_full.json';
 $.getJSON(dataset)
   .done(function(response) { //Se escribe el codigo aca adentro, utilizando response object como el contenedor, ya que getJSON es asincronico y no se puede pasar el objeto afuera del json
     let data = response.data;
@@ -44,9 +44,9 @@ $.getJSON(dataset)
 
     }
     sortBlobs();
-	console.log(data[0]);
+    console.log(data[0]);
 
-	/*
+    /*
     function listById(dataset) {
       let blobs = new Array();
       for (b of data) {
@@ -60,7 +60,7 @@ $.getJSON(dataset)
     function loadBlobs(tblob) {
       //Carga en Blob cada blob detectado de un objeto
       let blobs = new Array();
-	  let i;
+      let i;
       for (i = 0; i < data[tblob].lightweight_blobs.length; i++) {
 
         let objCenter = data[tblob].lightweight_blobs[i]['centroid'];
@@ -80,46 +80,63 @@ $.getJSON(dataset)
           let ntime = bl.time - blobs[0].blob.time;
           blobs.push(new Tuple(bl, ntime));
         }
-		
+
       }
       //console.log(blobs);
       //trackedBlobs.push(blobs);
       //console.log(trackedBlobs);
       return blobs;
     }
-/*
-    function dateTest() { //funcion para jugar con el objeto Date, ver como funciona y eso
-      let i;
-      let blob;
-      let blobsList = new Array();
-      let time = new Date(0, 0, 0, 0, 0);
-      for (let i = 0; i < data.length; i++) {
-        blob = new Tuple(data[i], time);
-        //cambia tiempo de cada tracked blob
-        if (blobsList.length == 0) {
-          blobsList.push(blob);
-        } else {
-          blob = new Tuple(data[i], new Date(blobsList[blobsList.length - 1].time));
-          //console.log("Antes de setear: " + blobsList[blobsList.length - 1]);
-          blob.setTime(10000 + blob.time.getMilliseconds());
-          blobsList.push(blob);
-          console.log(blobsList[blobsList.length - 1]);
+    /*
+        function dateTest() { //funcion para jugar con el objeto Date, ver como funciona y eso
+          let i;
+          let blob;
+          let blobsList = new Array();
+          let time = new Date(0, 0, 0, 0, 0);
+          for (let i = 0; i < data.length; i++) {
+            blob = new Tuple(data[i], time);
+            //cambia tiempo de cada tracked blob
+            if (blobsList.length == 0) {
+              blobsList.push(blob);
+            } else {
+              blob = new Tuple(data[i], new Date(blobsList[blobsList.length - 1].time));
+              //console.log("Antes de setear: " + blobsList[blobsList.length - 1]);
+              blob.setTime(10000 + blob.time.getMilliseconds());
+              blobsList.push(blob);
+              console.log(blobsList[blobsList.length - 1]);
+            }
+          }
+          console.log("Hora: " + blobsList[3].time);
+          console.log(blobsList[2].time);
         }
-      }
-      console.log("Hora: " + blobsList[3].time);
-      console.log(blobsList[2].time);
-    }
-    //datetest();*/
+        //datetest();*/
 
-	function loadScene() {
-      let scenetest = new Scene(20, 800, 400, 0);
+var width = 800;
+var heigth = 400;
+
+    function loadScenes() {
+      let scenes = new Array();//Arreglo que contiene todas las escenas
+      let scene = new Scene(20, width, heigth, 0);
       for (let i = 0; i < data.length; i++) {
         tuplas = loadBlobs(i);
-        tblob = new TrackedBlob(tuplas,0);
-        scenetest.insert(tblob);
+        if (scenes.length == 0){
+            tblob = new TrackedBlob(tuplas,0);
+        }
+        else tblob = new TrackedBlob(tuplas, scenes[scenes.length-1].getSceneTime());
+        scene.insert(tblob);
+        if (scene.objects.length == scene.objMax){
+          scenes.push(scene);
+          scene = new Scene(20,width,heigth,scenes[scenes.length-1].getSceneTime());
+          console.log(scenes[scenes.length-1].getSceneTime());
+
+        }
       }
-      return scenetest;
+      if (scene.length =! scenes[scenes.length-1].length){
+        scenes.push(scene);
+      }
+      return scenes;
     }
-  let otraprueba = loadScene();
-  console.log(otraprueba);
+    let otraprueba = loadScenes();
+    console.log(data);
+    console.log(otraprueba);
   });
