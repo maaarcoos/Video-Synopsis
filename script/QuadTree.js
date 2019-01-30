@@ -140,15 +140,13 @@ class Quadtree {
 
   collide(obj) {
 	  let i=0;
-    while(i < this.objects.length && !(obj.blob.overlap(this.objects[i]) && obj.similarTime(this.objects[i], 1000) && obj.blob.id != this.objects[i].blob.id)) {
-      
-        i++;
+    for(let i=0;i < this.objects.length;i++) {
+		if(obj.blob.overlap(this.objects[i]) && obj.similarTime(this.objects[i], 100) && obj.blob.id != this.objects[i].blob.id){
+			return true;
+		}
       }
-    if(i != this.objects.length){
-		return false;
-	}
-	return true;
 
+	return false;
   }
 
   insert(obj) {
