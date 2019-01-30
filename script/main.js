@@ -46,6 +46,7 @@ $.getJSON(dataset)
     sortBlobs();
 	console.log(data[0]);
 
+	/*
     function listById(dataset) {
       let blobs = new Array();
       for (b of data) {
@@ -55,11 +56,12 @@ $.getJSON(dataset)
       }
       console.log(blobs[1]);
     }
-
+*/
     function loadBlobs(tblob) {
       //Carga en Blob cada blob detectado de un objeto
       let blobs = new Array();
-      for (let i = 0; i < data[tblob].lightweight_blobs.length; i++) {
+	  let i;
+      for (i = 0; i < data[tblob].lightweight_blobs.length; i++) {
 
         let objCenter = data[tblob].lightweight_blobs[i]['centroid'];
         //console.log(objCenter + " " +i);
@@ -78,13 +80,14 @@ $.getJSON(dataset)
           let ntime = bl.time - blobs[0].blob.time;
           blobs.push(new Tuple(bl, ntime));
         }
+		
       }
       //console.log(blobs);
       //trackedBlobs.push(blobs);
       //console.log(trackedBlobs);
       return blobs;
     }
-
+/*
     function dateTest() { //funcion para jugar con el objeto Date, ver como funciona y eso
       let i;
       let blob;
@@ -106,7 +109,7 @@ $.getJSON(dataset)
       console.log("Hora: " + blobsList[3].time);
       console.log(blobsList[2].time);
     }
-    //datetest();
+    //datetest();*/
 
 	function loadScene() {
       let scenetest = new Scene(20, 800, 400, 0);
