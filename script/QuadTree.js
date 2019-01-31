@@ -1,8 +1,20 @@
 class TrackedBlob {
-  constructor(blobs, delay) {
-    this.delay = delay;
+  constructor(blobs) {
+    this.delay = 0;
     this.blobs = blobs; //Se le pasa una lista de blobs
   }
+  sortTBlob(){
+	  this.blobs.sort(function(a,b){
+		  return -b.time + +a.time;
+	  });
+  }
+  
+  getMaxTime(){
+	this.sortTBlob();
+	return this.blobs[this.blobs.length - 1].time + this.delay;
+  }
+  
+  
   getTimeIndex(index) {
     return this.blobs[index].time + this.delay;
   }
@@ -18,7 +30,8 @@ class Tuple {
     this.time = time;
     this.collision = false;
   }
-
+	
+	
   setTime(delay) {
     this.time = this.time + delay;
   }
@@ -231,6 +244,7 @@ class Scene {
 
   insert(tb) {
     let i = 0;
+	tb.setDelay(this.timeInit);//Scene se encarga de setear al nuevo tb el delay inicial, que es igual al comienzo de la escena
     while ((this.objects.length < this.objMax) && i < tb.blobs.length) {
       tb.blobs[i].setTime(tb.delay);
       this.quadtree.insert(tb.blobs[i]);
@@ -254,13 +268,21 @@ class Scene {
     }
     return false; //Devuelve si la cantidad de objetos excede la capacidad de la escena
   }
+  
+  sortScene(){
+
+	  this.objects.sort(function(a,b){
+		  return -b.blobs[b.blobs.length - 1].time + +a.blobs[a.blobs.length - 1].time;
+	  });
+  }
+  
+  
   getSceneTime() { //Devuelve la duracion maxima de la escena
-    let maxtime = 0;
-    for (let i = 0; i < this.objects.length; i++) {
-      if (this.objects[i].getTimeIndex(this.objects[i].blobs.length - 1) > maxtime) {
-        maxtime = this.objects[i].getTimeIndex(this.objects[i].blobs.length - 1);
+	for (let i = 0; i < this.objects.length; i++) {
+		this.objects[i].sortTBlob();
       }
-    }
-    return maxtime;
+	this.sortScene();
+	let tbMax=this.objects[this.objects.length - 1];
+    return tbMax.getMaxTime();
   }
 }
