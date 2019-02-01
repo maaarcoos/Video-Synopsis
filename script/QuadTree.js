@@ -3,23 +3,24 @@ class TrackedBlob {
     this.delay = 0;
     this.blobs = blobs; //Se le pasa una lista de blobs
   }
-  sortTBlob(){
-	  this.blobs.sort(function(a,b){
-		  return -b.time + +a.time;
-	  });
+  sortTBlob() {
+    this.blobs.sort(function(a, b) {
+      return -b.time + +a.time;
+    });
   }
-  
-  getMaxTime(){
-	this.sortTBlob();
-	return this.blobs[this.blobs.length - 1].time + this.delay;
+
+  getMaxTime() {
+    this.sortTBlob();
+    return this.blobs[this.blobs.length - 1].time + this.delay;
   }
-  
-  
+
+
   getTimeIndex(index) {
     return this.blobs[index].time + this.delay;
   }
   setDelay(lag) {
     this.delay = this.delay + lag;
+
   }
 }
 
@@ -30,8 +31,8 @@ class Tuple {
     this.time = time;
     this.collision = false;
   }
-	
-	
+
+
   setTime(delay) {
     this.time = this.time + delay;
   }
@@ -150,9 +151,8 @@ class Quadtree {
 
   collide(obj) {
     for (let i = 0; i < this.objects.length; i++) {
-      if (obj.blob.overlap(this.objects[i]) &&
-        obj.similarTime(this.objects[i], 100) &&
-        obj.blob.id != this.objects[i].blob.id) {
+      if (obj.blob.id != this.objects[i].blob.id && obj.blob.overlap(this.objects[i]) &&
+        obj.similarTime(this.objects[i], 100)) {
         return true;
       }
     }
@@ -167,6 +167,7 @@ class Quadtree {
       if (this.objects.length < this.maxObjects && !this.splited) { //Si la cantidad de objetos no excede la cantidad maxima permitida de objetos, inserta y ademas si aun no esta dividido
         if (this.collide(obj)) {
           obj.collision = true;
+          return true;
         } else {
           this.objects.push(obj);
         }
@@ -213,15 +214,19 @@ class Quadtree {
       while (i < this.objects.length && this.objects[i].blob.id != obj.blob.id) {
         i++;
       }
+      obj.collision = false;
       this.objects.splice(i, 1);
       return true;
     }
   }
 
-  getNeighbors() {
-    return this.objects;
+  update(id, delay) {
+
   }
+
 }
+
+
 
 class Scene {
   constructor(objMax, widthMax, hightMax, timeInit) {
@@ -243,46 +248,43 @@ class Scene {
   }
 
   insert(tb) {
-    let i = 0;
-	tb.setDelay(this.timeInit);//Scene se encarga de setear al nuevo tb el delay inicial, que es igual al comienzo de la escena
-    while ((this.objects.length < this.objMax) && i < tb.blobs.length) {
-      tb.blobs[i].setTime(tb.delay);
-      this.quadtree.insert(tb.blobs[i]);
-      if (tb.blobs[i].collision) { //al insert en el quadtree hay que agregar si hay o no colision
-        let j = i;
-        while (j >= 0) {
-          this.quadtree.drop(tb.blobs[j]);
-          let x = (tb.blobs[j].time - tb.delay);
-          tb.blobs[j].setTime(x);
-          j--;
-        }
-        tb.setDelay(100);
-        i = 0;
-      } else {
-        i++;
+    if (this.objects.length < this.objMax) {
+       tb.sortTBlob();
+       tb.setDelay(this.timeInit);
+      let i = 0;
+      //console.log("cant de blobs: " + tb.blobs.length);
+      while (i < tb.blobs.length) {
+        this.quadtree.insert(tb.blobs[i]);
+        if (tb.blobs[i].collision) {
+          tb.setDelay(100);
+          for (let j = 0; j < tb.blobs.length; j++) {
+            tb.blobs[j].time += tb.delay;
+          }
+          this.quadtree.drop(tb.blobs[i]);
+          tb.blobs[i].collision = false;
+          i = 0;
+        } else i++;
       }
-
-
       this.objects.push(tb);
       return true;
     }
-    return false; //Devuelve si la cantidad de objetos excede la capacidad de la escena
+    return false;
   }
-  
-  sortScene(){
 
-	  this.objects.sort(function(a,b){
-		  return -b.blobs[b.blobs.length - 1].time + +a.blobs[a.blobs.length - 1].time;
-	  });
+  sortScene() {
+
+    this.objects.sort(function(a, b) {
+      return (-b.blobs[b.blobs.length - 1].time + +a.blobs[a.blobs.length - 1].time);
+    });
   }
-  
-  
+
+
   getSceneTime() { //Devuelve la duracion maxima de la escena
-	for (let i = 0; i < this.objects.length; i++) {
-		this.objects[i].sortTBlob();
-      }
-	this.sortScene();
-	let tbMax=this.objects[this.objects.length - 1];
+    this.sortScene();
+    console.log(this.objects[this.objects.length-1]);
+    let tbMax = this.objects[this.objects.length-1];
+    //console.log(this.objects + " " + tbMax.getMaxTime());
     return tbMax.getMaxTime();
   }
+
 }

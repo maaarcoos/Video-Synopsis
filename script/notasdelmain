@@ -26,3 +26,33 @@ for(i = 0; i < data.length; i++){
 }
 */
 //var FinalList = new Array();
+
+
+Insert de Scene:
+
+insert(tb) {
+  let i = 0;
+  tb.setDelay(this.timeInit); //Scene se encarga de setear al nuevo tb el delay inicial, que es igual al comienzo de la escena
+  if (this.objects.length < this.objMax) {
+    while (i < tb.blobs.length) {
+      tb.blobs[i].setTime(tb.delay);
+      this.quadtree.insert(tb.blobs[i]);
+      if (tb.blobs[i].collision) { //al insert en el quadtree hay que agregar si hay o no colision
+        let j = i - 1;
+        while (j >= 0) {
+          this.quadtree.drop(tb.blobs[j]);
+          let x = (tb.blobs[j].time - tb.delay);
+          tb.blobs[j].setTime(x);
+          j--;
+        }
+        tb.setDelay(100);
+        i = 0;
+      } else {
+        i++;
+      }
+    }
+    this.objects.push(tb);
+    return true;
+  }
+  return false; //Devuelve si la cantidad de objetos excede la capacidad de la escena
+}

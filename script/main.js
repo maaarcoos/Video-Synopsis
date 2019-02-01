@@ -1,5 +1,7 @@
 console.log("Todo bien1");
 
+var t0 = performance.now();
+
 let quad;
 let tuplas;
 //Prueba cargar todos los blobs del data example
@@ -44,7 +46,6 @@ $.getJSON(dataset)
 
     }
     sortBlobs();
-    console.log(data[0]);
 
     /*
     function listById(dataset) {
@@ -73,12 +74,13 @@ $.getJSON(dataset)
         //console.log(time);
         let bl = new Frame(cornerCoord.x, cornerCoord.y, width, height, tracked_blob_id, time, 800, 400); //{tracked_blob_id,width,height,time,cornerCoord};
 
-
         if (blobs.length == 0) {
           blobs.push(new Tuple(bl, 0));
         } else {
-          let ntime = bl.time - blobs[0].blob.time;
+          let ntime = bl.time.getTime() - blobs[0].blob.time.getTime();
+          //console.log(ntime);
           blobs.push(new Tuple(bl, ntime));
+
         }
 
       }
@@ -111,39 +113,40 @@ $.getJSON(dataset)
         }
         //datetest();*/
 
-var width = 800;
-var heigth = 400;
+    var width = 800;
+    var heigth = 400;
 
 
 
     function loadScenes() {
-		let objMax=20;
-		let timeInit=0;
-      let sceneList = new Array();//Arreglo que contiene todas las escenas
-	  let scene;
+      let objMax = 20;
+      let timeInit = 0;
+      let sceneList = new Array(); //Arreglo que contiene todas las escenas
+      let scene;
       for (let i = 0; i < data.length; i++) {
         tuplas = loadBlobs(i);
-		tblob= new TrackedBlob(tuplas);//ahora al tb solo se le manda el arreglo de tuplas y por defecto el delay va a ser siempre 0
-		if(sceneList.length == 0){
-			scene= new Scene(objMax, width, heigth, timeInit);//dentro de scene, le va a setear al nuevo tb el delay correspondiente al timeInit de la escena
-			scene.insert(tblob);
-			sceneList.push(scene);
-		}
-		else{
-			if(sceneList[sceneList.length-1].insert(tblob)){
-				//nada
-			}
-			else{
-				timeInit=sceneList[sceneList.length-1].getSceneTime();
-				scene= new Scene(objMax,width,heigth,timeInit);
-				scene.insert(tblob);
-				sceneList.push(scene);}
-		}
+        tblob = new TrackedBlob(tuplas); //ahora al tb solo se le manda el arreglo de tuplas y por defecto el delay va a ser siempre 0
+        if (sceneList.length == 0) {
+          scene = new Scene(objMax, width, heigth, timeInit); //dentro de scene, le va a setear al nuevo tb el delay correspondiente al timeInit de la escena
+          scene.insert(tblob);
+          sceneList.push(scene);
+        } else {
+          if (sceneList[sceneList.length - 1].insert(tblob)) {
+            //nada
+          } else {
+            timeInit = sceneList[sceneList.length - 1].getSceneTime();
+            scene = new Scene(objMax, width, heigth, timeInit);
+            console.log(sceneList);
+            scene.insert(tblob);
+            sceneList.push(scene);
+          }
+        }
+      }
+      return sceneList;
     }
-	return sceneList;
-	}
 
     let otraprueba = loadScenes();
-    console.log(data);
     console.log(otraprueba);
+    var t1 = performance.now();
+    console.log(t1 - t0);
   });
