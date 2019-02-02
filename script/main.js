@@ -136,7 +136,7 @@ $.getJSON(dataset)
           } else {
             timeInit = sceneList[sceneList.length - 1].getSceneTime();
             scene = new Scene(objMax, width, heigth, timeInit);
-            console.log(sceneList);
+           // console.log(sceneList);
             scene.insert(tblob);
             sceneList.push(scene);
           }

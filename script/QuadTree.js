@@ -150,27 +150,56 @@ class Quadtree {
   }
 
   collide(obj) {
-    for (let i = 0; i < this.objects.length; i++) {
-      if (obj.blob.id != this.objects[i].blob.id && obj.blob.overlap(this.objects[i]) &&
-        obj.similarTime(this.objects[i], 100)) {
-        return true;
-      }
-    }
-
-    return false;
-  }
+	if(!this.bounds.contains(obj)){
+		return false;
+		//console.log("holi");
+	}
+	else
+		if(this.objects.length < this.maxObjects && !this.splited){
+			//console.log("holi");
+			for (let i = 0; i < this.objects.length; i++) {
+				if (obj.blob.id != this.objects[i].blob.id && obj.blob.overlap(this.objects[i]) &&
+				obj.similarTime(this.objects[i], 1000)) {
+					obj.collision=true;
+					return true;
+					}
+			}
+		}
+		else if(this.splited){
+			if(this.child0.collide(obj)){
+				//console.log("holi");
+				return true;}
+			else 
+				if(this.child1.collide(obj))
+					{
+						return true;
+						}
+			else 
+				if(this.child2.collide(obj))
+					{
+						return true;
+						}
+			else 
+				if(this.child3.collide(obj))
+					{
+						return true;
+						}
+    
+		}
+			else return false;
+}
 
   insert(obj) {
     if (!this.bounds.contains(obj)) { //Si no lo puede contener al objeto por lo limites, retorna false
       return false;
     } else {
       if (this.objects.length < this.maxObjects && !this.splited) { //Si la cantidad de objetos no excede la cantidad maxima permitida de objetos, inserta y ademas si aun no esta dividido
-        if (this.collide(obj)) {
+        /*if (this.collide(obj)) {
           obj.collision = true;
-          return true;
-        } else {
+
+        } else {*/
           this.objects.push(obj);
-        }
+      //  }
         return true;
       } else {
 
@@ -248,28 +277,35 @@ class Scene {
   }
 
   insert(tb) {
-    if (this.objects.length < this.objMax) {
-       tb.sortTBlob();
-       tb.setDelay(this.timeInit);
+    if(this.objects.length < this.objMax){
+		tb.sortTBlob();
+       tb.setDelay(this.timeInit);//Scene se encarga de setear al nuevo tb el delay inicial, que es igual al comienzo de la escena
       let i = 0;
-      //console.log("cant de blobs: " + tb.blobs.length);
-      while (i < tb.blobs.length) {
-        this.quadtree.insert(tb.blobs[i]);
-        if (tb.blobs[i].collision) {
-          tb.setDelay(100);
-          for (let j = 0; j < tb.blobs.length; j++) {
-            tb.blobs[j].time += tb.delay;
-          }
-          this.quadtree.drop(tb.blobs[i]);
-          tb.blobs[i].collision = false;
-          i = 0;
-        } else i++;
-      }
-      this.objects.push(tb);
-      return true;
-    }
-    return false;
+		while (i < tb.blobs.length) {
+			tb.blobs[i].time += tb.delay;
+			if (this.quadtree.collide(tb.blobs[i])) { //al insert en el quadtree hay que agregar si hay o no colision
+				let j = i;
+				while (j >= 0) {
+
+					tb.blobs[j].time -= tb.delay;
+					j--;
+					}
+				tb.setDelay(100);
+				i = 0;
+			} else {
+				i++;
+			}
+
+		}
+		for(let j=0;j<this.objects.length;j++){
+			this.quadtree.insert(tb.blobs[j]);
+		}
+		this.objects.push(tb);
+		return true;
+	}
+    return false; //Devuelve si la cantidad de objetos excede la capacidad de la escena
   }
+  
 
   sortScene() {
 
