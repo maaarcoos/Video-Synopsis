@@ -164,6 +164,7 @@ class Quadtree {
 					return true;
 					}
 			}
+			return false;
 		}
 		else if(this.splited){
 			if(this.child0.collide(obj)){
