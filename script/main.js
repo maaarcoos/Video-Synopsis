@@ -2,29 +2,7 @@ console.log("Todo bien1");
 
 var t0 = performance.now();
 
-let quad;
 let tuplas;
-//Prueba cargar todos los blobs del data example
-
-function prueba() {
-  let x, y, w, h;
-  w = Math.random() * 100;
-  h = Math.random() * 50;
-  x = 1;
-  y = 1;
-  let obj;
-  //console.log(quad);
-  //for (let o : blobs) {
-  //  obj = new Rectangle(x, y, w, h);
-
-  //  blobs.push(obj);
-  //  quad.insert(o);
-  //  x = floor(Math.random()*800);
-  //  y = floor(Math.random()*400);
-  //  console.log("x:" + x + " y:" + y);
-  //}
-  //console.log(quad);
-}
 
 var dataset = 'script/assets/dataset_full.json';
 $.getJSON(dataset)
@@ -47,17 +25,6 @@ $.getJSON(dataset)
     }
     sortBlobs();
 
-    /*
-    function listById(dataset) {
-      let blobs = new Array();
-      for (b of data) {
-        let tblob = new Tuple(b, new Date(0, 0, 0, 0, 0));
-        blobs.push(tblob);
-        console.log(tblob);
-      }
-      console.log(blobs[1]);
-    }
-*/
     function loadBlobs(tblob) {
       //Carga en Blob cada blob detectado de un objeto
       let blobs = new Array();
@@ -67,12 +34,13 @@ $.getJSON(dataset)
         let objCenter = data[tblob].lightweight_blobs[i]['centroid'];
         //console.log(objCenter + " " +i);
         let cornerCoord = JSON.parse(objCenter); //necesito convertir el json a un objeto de Javascript
-        let tracked_blob_id = JSON.stringify(data[tblob].lightweight_blobs[i].tracked_blob_id);
+        let tracked_blob_id = data[tblob].lightweight_blobs[i].tracked_blob_id;
         let width = parseFloat(data[tblob].lightweight_blobs[i].width); //parse convierte un string al tipo que queramos
         let height = parseFloat(data[tblob].lightweight_blobs[i].height); //por ejemplo, parseFloat lo pasa a float
         let time = new Date(data[tblob].lightweight_blobs[i].time);
         //console.log(time);
-        let bl = new Frame(cornerCoord.x, cornerCoord.y, width, height, tracked_blob_id, time, 800, 400); //{tracked_blob_id,width,height,time,cornerCoord};
+        let bl = new Frame(cornerCoord.x, cornerCoord.y, width,
+          height, tracked_blob_id, time, 800, 400); //{tracked_blob_id,width,height,time,cornerCoord};
 
         if (blobs.length == 0) {
           blobs.push(new Tuple(bl, 0));
@@ -80,38 +48,11 @@ $.getJSON(dataset)
           let ntime = bl.time.getTime() - blobs[0].blob.time.getTime();
           //console.log(ntime);
           blobs.push(new Tuple(bl, ntime));
-
         }
-
       }
-      //console.log(blobs);
-      //trackedBlobs.push(blobs);
-      //console.log(trackedBlobs);
       return blobs;
     }
-    /*
-        function dateTest() { //funcion para jugar con el objeto Date, ver como funciona y eso
-          let i;
-          let blob;
-          let blobsList = new Array();
-          let time = new Date(0, 0, 0, 0, 0);
-          for (let i = 0; i < data.length; i++) {
-            blob = new Tuple(data[i], time);
-            //cambia tiempo de cada tracked blob
-            if (blobsList.length == 0) {
-              blobsList.push(blob);
-            } else {
-              blob = new Tuple(data[i], new Date(blobsList[blobsList.length - 1].time));
-              //console.log("Antes de setear: " + blobsList[blobsList.length - 1]);
-              blob.setTime(10000 + blob.time.getMilliseconds());
-              blobsList.push(blob);
-              console.log(blobsList[blobsList.length - 1]);
-            }
-          }
-          console.log("Hora: " + blobsList[3].time);
-          console.log(blobsList[2].time);
-        }
-        //datetest();*/
+
 
     var width = 800;
     var heigth = 400;
@@ -125,7 +66,8 @@ $.getJSON(dataset)
       let scene;
       for (let i = 0; i < data.length; i++) {
         tuplas = loadBlobs(i);
-        tblob = new TrackedBlob(tuplas); //ahora al tb solo se le manda el arreglo de tuplas y por defecto el delay va a ser siempre 0
+        let tracked_blob_id = data[i].lightweight_blobs[0].tracked_blob_id;
+        tblob = new TrackedBlob(tuplas, tracked_blob_id); //ahora al tb solo se le manda el arreglo de tuplas y por defecto el delay va a ser siempre 0
         if (sceneList.length == 0) {
           scene = new Scene(objMax, width, heigth, timeInit); //dentro de scene, le va a setear al nuevo tb el delay correspondiente al timeInit de la escena
           scene.insert(tblob);

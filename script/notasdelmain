@@ -56,3 +56,27 @@ insert(tb) {
   }
   return false; //Devuelve si la cantidad de objetos excede la capacidad de la escena
 }
+
+/*
+    function dateTest() { //funcion para jugar con el objeto Date, ver como funciona y eso
+      let i;
+      let blob;
+      let blobsList = new Array();
+      let time = new Date(0, 0, 0, 0, 0);
+      for (let i = 0; i < data.length; i++) {
+        blob = new Tuple(data[i], time);
+        //cambia tiempo de cada tracked blob
+        if (blobsList.length == 0) {
+          blobsList.push(blob);
+        } else {
+          blob = new Tuple(data[i], new Date(blobsList[blobsList.length - 1].time));
+          //console.log("Antes de setear: " + blobsList[blobsList.length - 1]);
+          blob.setTime(10000 + blob.time.getMilliseconds());
+          blobsList.push(blob);
+          console.log(blobsList[blobsList.length - 1]);
+        }
+      }
+      console.log("Hora: " + blobsList[3].time);
+      console.log(blobsList[2].time);
+    }
+    //datetest();*/
