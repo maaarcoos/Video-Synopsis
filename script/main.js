@@ -41,8 +41,7 @@ $.getJSON(dataset)
         let height = parseFloat(data[tblob].lightweight_blobs[i].height); //por ejemplo, parseFloat lo pasa a float
         let time = new Date(data[tblob].lightweight_blobs[i].time);
         //console.log(time);
-        let bl = new Frame(cornerCoord.x, cornerCoord.y, width,
-          height, tracked_blob_id, time, 800, 400); //{tracked_blob_id,width,height,time,cornerCoord};
+        let bl = new Frame(cornerCoord.x, cornerCoord.y, width, height, tracked_blob_id, time, 800, 400); //{tracked_blob_id,width,height,time,cornerCoord};
 
         if (blobs.length == 0) {
           blobs.push(new Tuple(bl, 0));
@@ -63,26 +62,22 @@ $.getJSON(dataset)
 
     function loadScenes() {
       let objMax = 20;
+	  let persMax = 10;
       let timeInit = 0;
       let sceneList = new Array(); //Arreglo que contiene todas las escenas
       let scene;
-      console.log(data);
+      //console.log(data);
 
       for (let i = 0; i < data.length; i++) {
+		let aliasShape = data[i].data.shape[0];
+
         tuplas = loadBlobs(i);
-        let aliasShape = data[i].data.shape[0];
-        if (aliasShape == undefined){
-          //Setear por defecto los valores de un data
-          aliasShape = {'accuracy' : 100, 'alias' : 'human', 'classifier' : 'NeuralNet'};
-        }
-        amountTB++;
-        //console.log(aliasShape);
-        //console.log(amountTB);
+
         let tracked_blob_id = data[i].lightweight_blobs[0].tracked_blob_id;
-        tblob = new TrackedBlob(tuplas, tracked_blob_id, aliasShape.alias); //ahora al tb solo se le manda el arreglo de tuplas y por defecto el delay va a ser siempre 0
-        console.log(tblob);
+        tblob = new TrackedBlob(tuplas, tracked_blob_id, aliasShape); //ahora al tb solo se le manda el arreglo de tuplas y por defecto el delay va a ser siempre 0
+        //console.log(tblob);
         if (sceneList.length == 0) {
-          scene = new Scene(objMax, width, heigth, timeInit); //dentro de scene, le va a setear al nuevo tb el delay correspondiente al timeInit de la escena
+          scene = new Scene(objMax, persMax, width, heigth, timeInit); //dentro de scene, le va a setear al nuevo tb el delay correspondiente al timeInit de la escena
           scene.insert(tblob);
           sceneList.push(scene);
         } else {
@@ -90,7 +85,7 @@ $.getJSON(dataset)
             //nada
           } else {
             timeInit = sceneList[sceneList.length - 1].getSceneTime();
-            scene = new Scene(objMax, width, heigth, timeInit);
+            scene = new Scene(objMax, persMax, width, heigth, timeInit);
             // console.log(sceneList);
             scene.insert(tblob);
             sceneList.push(scene);
@@ -104,4 +99,5 @@ $.getJSON(dataset)
     console.log(otraprueba);
     var t1 = performance.now();
     console.log(t1 - t0);
-  });
+  }
+  );
