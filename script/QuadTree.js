@@ -214,7 +214,7 @@ class Scene {
   constructor(objMax, widthMax, hightMax, timeInit) {
     this.objMax = objMax;
     this.bounds = new Rectangle(0, 0, widthMax, hightMax);
-    this.quadtree = new Quadtree(this.bounds, objMax / 4);
+    this.quadtree = new Quadtree(this.bounds, objMax);
     this.timeInit = timeInit;
     this.timeLimit;
     this.objects = new Array(); //arreglo de tracked blobs
@@ -237,18 +237,19 @@ class Scene {
           }
           tb.setDelay(100);
           i = 0;
+          tb.blobs[i].collision = false;
         } else {
           i++;
         }
 
       }
-      for (let j = 0; j < this.objects.length; j++) {
+      for (let j = 0; j < tb.blobs.length; j++) {
         this.quadtree.insert(tb.blobs[j]);
       }
-      if (tb.alias == "human"){
+      if (tb.alias == "human" || tb.alias == "cyclist"){
         this.humans.push(tb);
       }
-      this.objects.push(tb);
+      else this.objects.push(tb);
       return true;
     }
     return false; //Devuelve si la cantidad de objetos excede la capacidad de la escena
