@@ -1,5 +1,7 @@
 console.log("Todo bien1");
 
+var amountTB = 0;
+
 var t0 = performance.now();
 
 let tuplas;
@@ -64,10 +66,21 @@ $.getJSON(dataset)
       let timeInit = 0;
       let sceneList = new Array(); //Arreglo que contiene todas las escenas
       let scene;
+      console.log(data);
+
       for (let i = 0; i < data.length; i++) {
         tuplas = loadBlobs(i);
+        let aliasShape = data[i].data.shape[0];
+        if (aliasShape == undefined){
+          //Setear por defecto los valores de un data
+          aliasShape = {'accuracy' : 100, 'alias' : 'human', 'classifier' : 'NeuralNet'};
+        }
+        amountTB++;
+        //console.log(aliasShape);
+        //console.log(amountTB);
         let tracked_blob_id = data[i].lightweight_blobs[0].tracked_blob_id;
-        tblob = new TrackedBlob(tuplas, tracked_blob_id); //ahora al tb solo se le manda el arreglo de tuplas y por defecto el delay va a ser siempre 0
+        tblob = new TrackedBlob(tuplas, tracked_blob_id, aliasShape.alias); //ahora al tb solo se le manda el arreglo de tuplas y por defecto el delay va a ser siempre 0
+        console.log(tblob);
         if (sceneList.length == 0) {
           scene = new Scene(objMax, width, heigth, timeInit); //dentro de scene, le va a setear al nuevo tb el delay correspondiente al timeInit de la escena
           scene.insert(tblob);
@@ -78,7 +91,7 @@ $.getJSON(dataset)
           } else {
             timeInit = sceneList[sceneList.length - 1].getSceneTime();
             scene = new Scene(objMax, width, heigth, timeInit);
-           // console.log(sceneList);
+            // console.log(sceneList);
             scene.insert(tblob);
             sceneList.push(scene);
           }

@@ -1,8 +1,9 @@
 class TrackedBlob {
-  constructor(blobs,id) {
+  constructor(blobs,id,alias) {
     this.delay = 0;
     this.blobs = blobs; //Se le pasa una lista de blobs
     this.id = id;
+    this.alias = alias;
   }
   sortTBlob() {
     this.blobs.sort(function(a, b) {
@@ -217,6 +218,8 @@ class Scene {
     this.timeInit = timeInit;
     this.timeLimit;
     this.objects = new Array(); //arreglo de tracked blobs
+    this.humans = new Array(); //arreglo donde se guardan tracked blobs que fueron detectados
+                                // con el alias "human"
   }
 
   insert(tb) {
@@ -241,6 +244,9 @@ class Scene {
       }
       for (let j = 0; j < this.objects.length; j++) {
         this.quadtree.insert(tb.blobs[j]);
+      }
+      if (tb.alias == "human"){
+        this.humans.push(tb);
       }
       this.objects.push(tb);
       return true;
