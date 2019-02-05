@@ -1,5 +1,4 @@
 console.log("Todo bien1");
-//Error.stackTraceLimit=undefined //unlimited stack trace
 
 var amountTB = 0;
 
@@ -7,7 +6,7 @@ var t0 = performance.now();
 
 let tuplas;
 
-var dataset = 'script/assets/dataset_full.json';
+var dataset = 'script/assets/dataset_small.json';
 $.getJSON(dataset)
   .done(function(response) { //Se escribe el codigo aca adentro, utilizando response object como el contenedor, ya que getJSON es asincronico y no se puede pasar el objeto afuera del json
     let data = response.data;
@@ -62,8 +61,8 @@ $.getJSON(dataset)
 
 
     function loadScenes() {
-      let objMax = 20;
-	  let persMax = 10;
+      let objMax = 32;
+	  let persMax = 8;
       let timeInit = 0;
       let sceneList = new Array(); //Arreglo que contiene todas las escenas
       let scene;
@@ -100,5 +99,22 @@ $.getJSON(dataset)
     console.log(otraprueba);
     var t1 = performance.now();
     console.log(t1 - t0);
+	for(let i=0; i<otraprueba.length; i++){
+			let cantObj=0;
+	let cantPers=0;
+		console.log("holis");
+		 console.log(otraprueba[i].getMaxObjecQuad());
+		 console.log(otraprueba[i].objects.length);
+		 console.log(otraprueba[i].persons.length);
+		 for(let j=0; j<otraprueba[i].objects.length; j++){
+			 cantObj=otraprueba[i].objects[j].blobs.length;
+		 }
+		 for(let t=0; t<otraprueba[i].persons.length;t++){
+			 cantPers=otraprueba[i].persons[t].blobs.length;
+		 }
+		 console.log(cantObj);
+		 console.log(cantPers);
+		//console.log(otraprueba[i].quadtree.objects.length);
+	}
   }
   );
