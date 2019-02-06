@@ -106,6 +106,20 @@ class Quadtree {
     this.splited = true;
   }
 
+  clear(){
+	  if(! this.splited){
+		for(let i=0;i<this.objects.length;i++){
+		  this.objects.splice(i,1);
+		}
+		//this.objects=[];
+	  }
+	  else{
+		  this.child0.clear();
+			this.child1.clear();
+			this.child2.clear();
+			this.child3.clear();
+	}
+  }
   retrieve() {
     while (this.objects.length != 0) {
       let obj = this.objects.pop();
@@ -229,9 +243,7 @@ class Scene {
 
   insert(tb) {
 	  if((this.persons.length < this.personsMax)||(this.objects.length < this.objMax )){
-		  
-	  
-	  		tb.setDelay(this.timeInit); //Scene se encarga de setear al nuevo tb el delay inicial, que es igual al comienzo de la escena
+		tb.setDelay(this.timeInit); //Scene se encarga de setear al nuevo tb el delay inicial, que es igual al comienzo de la escena
 		let i = 0;
 		while (i < tb.blobs.length) {
 			tb.blobs[i].time += tb.delay;
@@ -263,8 +275,10 @@ class Scene {
 	for(let i=0;i<tb.blobs.length;i++){
 		this.quadtree.drop(tb.blobs[i]);
 	}
+	//this.quadtree.clear();
 	return false;
 	  }
+	//  this.quadtree.clear();
     return false; //Devuelve si la cantidad de objetos excede la capacidad de la escena
   }
 
