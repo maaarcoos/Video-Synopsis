@@ -228,8 +228,10 @@ class Scene {
   }
 
   insert(tb) {
-	 if(!(tb.alias == undefined) && this.persons.length < this.personsMax && tb.alias.accuracy >= 60 && (tb.alias.alias == "human" || tb.alias.alias == "ciclist") ){
-		tb.setDelay(this.timeInit); //Scene se encarga de setear al nuevo tb el delay inicial, que es igual al comienzo de la escena
+	  if((this.persons.length < this.personsMax)||(this.objects.length < this.objMax )){
+		  
+	  
+	  		tb.setDelay(this.timeInit); //Scene se encarga de setear al nuevo tb el delay inicial, que es igual al comienzo de la escena
 		let i = 0;
 		while (i < tb.blobs.length) {
 			tb.blobs[i].time += tb.delay;
@@ -248,32 +250,21 @@ class Scene {
 		for (let j = 0; j < tb.blobs.length; j++) {
 			this.quadtree.insert(tb.blobs[j]);
 		}
+		if(!(tb.alias == undefined) && this.persons.length < this.personsMax && (tb.alias.alias == "human" || tb.alias.alias == "ciclist") ){
 		   this.persons.push(tb);
 		   return true;
 		}
 		else if((tb.alias == undefined) && (this.objects.length < this.objMax ) || (this.objects.length < this.objMax ) || !(this.persons.length < this.personsMax)){
-			      tb.setDelay(this.timeInit); //Scene se encarga de setear al nuevo tb el delay inicial, que es igual al comienzo de la escena
-				let i = 0;
-				while (i < tb.blobs.length) {
-					tb.blobs[i].time += tb.delay;
-					if (this.quadtree.collide(tb.blobs[i])) { //al insert en el quadtree hay que agregar si hay o no colision
-						let j = i;
-						while (j >= 0) {
-							tb.blobs[j].time -= tb.delay;
-							j--;
-						}
-						tb.setDelay(100);
-						i = 0;
-					} else {
-						i++;
-					}
-		}
-			for (let j = 0; j < tb.blobs.length; j++) {
-				this.quadtree.insert(tb.blobs[j]);
-			}
+			     
 			this.objects.push(tb);
 			return true;
 		}
+		
+	for(let i=0;i<tb.blobs.length;i++){
+		this.quadtree.drop(tb.blobs[i]);
+	}
+	return false;
+	  }
     return false; //Devuelve si la cantidad de objetos excede la capacidad de la escena
   }
 
