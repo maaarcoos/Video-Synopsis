@@ -6,7 +6,7 @@ var t0 = performance.now();
 
 let tuplas;
 
-var dataset = 'script/assets/dataset_small.json';
+var dataset = 'script/assets/dataset_full.json';
 $.getJSON(dataset)
   .done(function(response) { //Se escribe el codigo aca adentro, utilizando response object como el contenedor, ya que getJSON es asincronico y no se puede pasar el objeto afuera del json
     let data = response.data;
@@ -62,14 +62,14 @@ $.getJSON(dataset)
 
     function loadScenes() {
       let objMax = 32;
-	  let persMax = 8;
+      let persMax = 8;
       let timeInit = 0;
       let sceneList = new Array(); //Arreglo que contiene todas las escenas
       let scene;
       //console.log(data);
 
       for (let i = 0; i < data.length; i++) {
-		let aliasShape = data[i].data.shape[0];
+        let aliasShape = data[i].data.shape[0];
 
         tuplas = loadBlobs(i);
 
@@ -86,7 +86,7 @@ $.getJSON(dataset)
           } else {
             timeInit = sceneList[sceneList.length - 1].getSceneTime();
             scene = new Scene(objMax, persMax, width, heigth, timeInit);
-            // console.log(sceneList);
+            console.log(sceneList);
             scene.insert(tblob);
             sceneList.push(scene);
           }
@@ -97,24 +97,25 @@ $.getJSON(dataset)
 
     let otraprueba = loadScenes();
     console.log(otraprueba);
+    for (let i = 0; i < otraprueba.length; i++) {
+      let cantObj = 0;
+      let cantPers = 0;
+      console.log("holis");
+      console.log(otraprueba[i].getMaxObjectQuad());
+      console.log(otraprueba[i].objects.length);
+      console.log(otraprueba[i].persons.length);
+      for (let j = 0; j < otraprueba[i].objects.length; j++) {
+        cantObj = otraprueba[i].objects[j].blobs.length;
+      }
+      for (let t = 0; t < otraprueba[i].persons.length; t++) {
+        cantPers = otraprueba[i].persons[t].blobs.length;
+      }
+      console.log(cantObj);
+      console.log(cantPers);
+
+
+      //console.log(otraprueba[i].quadtree.objects.length);
+    }
     var t1 = performance.now();
     console.log(t1 - t0);
-	for(let i=0; i<otraprueba.length; i++){
-			let cantObj=0;
-	let cantPers=0;
-		console.log("holis");
-		 console.log(otraprueba[i].getMaxObjecQuad());
-		 console.log(otraprueba[i].objects.length);
-		 console.log(otraprueba[i].persons.length);
-		 for(let j=0; j<otraprueba[i].objects.length; j++){
-			 cantObj=otraprueba[i].objects[j].blobs.length;
-		 }
-		 for(let t=0; t<otraprueba[i].persons.length;t++){
-			 cantPers=otraprueba[i].persons[t].blobs.length;
-		 }
-		 console.log(cantObj);
-		 console.log(cantPers);
-		//console.log(otraprueba[i].quadtree.objects.length);
-	}
-  }
-  );
+  });

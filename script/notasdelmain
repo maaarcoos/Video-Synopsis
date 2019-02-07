@@ -80,3 +80,20 @@ insert(tb) {
       console.log(blobsList[2].time);
     }
     //datetest();*/
+
+    tb.setDelay(this.timeInit); //Scene se encarga de setear al nuevo tb el delay inicial, que es igual al comienzo de la escena
+    let i = 0;
+    while (i < tb.blobs.length) {
+      tb.blobs[i].time += tb.delay;
+      if (this.quadtree.collide(tb.blobs[i])) { //al insert en el quadtree hay que agregar si hay o no colision
+        let j = i;
+        while (j >= 0) {
+          tb.blobs[j].time -= tb.delay;
+          j--;
+        }
+        tb.setDelay(100);
+        i = 0;
+      } else {
+        i++;
+      }
+}
