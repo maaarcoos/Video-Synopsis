@@ -176,6 +176,21 @@ class Quadtree {
       }
     }
   }
+  
+    clear(){
+	  if(! this.splited){
+		for(let i=0;i<this.objects.length;i++){
+		  this.objects.splice(i,1);
+		}
+		//this.objects=[];
+	  }
+	  else{
+		  this.child0.clear();
+			this.child1.clear();
+			this.child2.clear();
+			this.child3.clear();
+	}
+  }
 
   drop(obj) {
     if (!this.bounds.contains(obj)) { //Si no lo podria contener, no se fija de sacarlo
@@ -245,17 +260,13 @@ class Scene {
         }
       }
 
-      if (!(tb.alias == undefined) &&
-        this.persons.length < this.personsMax &&
-        tb.alias.accuracy >= 60 &&
-        (tb.alias.alias == "human" || tb.alias.alias == "cyclist")) {
+      if (!(tb.alias == undefined) && this.persons.length < this.personsMax && tb.alias.accuracy >= 60 && (tb.alias.alias == "human" || tb.alias.alias == "cyclist")) {
         for (let j = 0; j < tb.blobs.length; j++) {
           this.quadtree.insert(tb.blobs[j]);
         }
         this.persons.push(tb);
         return true;
-      } else if ((tb.alias == undefined) && (this.objects.length < this.objMax) ||
-        (this.objects.length < this.objMax)) {
+      } else if ((tb.alias == undefined) && (this.objects.length < this.objMax) || (this.objects.length < this.objMax) || (this.persons.length < this.persMax) ) {
 
         for (let j = 0; j < tb.blobs.length; j++) {
           this.quadtree.insert(tb.blobs[j]);
@@ -265,6 +276,7 @@ class Scene {
       }
       return false; //Devuelve si la cantidad de objetos excede la capacidad de la escena
     }
+	return false;
   }
 
   sortScene() {
