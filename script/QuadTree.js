@@ -266,7 +266,7 @@ class Scene {
         }
         this.persons.push(tb);
         return true;
-      } else if ((tb.alias == undefined) && (this.objects.length < this.objMax) || (this.objects.length < this.objMax) || (this.persons.length < this.persMax) ) {
+      } else if ((tb.alias == undefined) && (this.objects.length < this.objMax) || (this.objects.length < this.objMax) || !(this.persons.length < this.persMax) ) {
 
         for (let j = 0; j < tb.blobs.length; j++) {
           this.quadtree.insert(tb.blobs[j]);
