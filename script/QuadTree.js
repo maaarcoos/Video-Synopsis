@@ -294,10 +294,13 @@ class Scene {
   }
 
   getSceneTime() { //Devuelve la duracion maxima de la escena
-    this.sortScene();
-    let timeMax = Math.max(this.objects[this.objects.length - 1].getMaxTime(), this.persons[this.persons.length-1].getMaxTime());
-    console.log("tiempo de escena: " + timeMax);
-    return timeMax;
+	if(this.objects.length != 0 || this.persons.length !=0){
+		this.sortScene();
+		let timeMax = Math.max(this.objects[this.objects.length - 1].getMaxTime(), this.persons[this.persons.length-1].getMaxTime());
+		console.log("tiempo de escena: " + timeMax);
+		return timeMax;
+	}
+	return 0;
   }
 
 }
