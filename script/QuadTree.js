@@ -243,11 +243,11 @@ class Scene {
 
   insert(tb) {
     if (this.objects.length < this.objMax || this.persons.length < this.persMax) {
-      tb.setDelay(this.timeInit); //Scene se encarga de setear al nuevo tb el delay inicial, que es igual al comienzo de la escena
+      tb.setDelay(this.timeInit); 
       let i = 0;
       while (i < tb.blobs.length) {
         tb.blobs[i].time += tb.delay;
-        if (this.quadtree.collide(tb.blobs[i])) { //al insert en el quadtree hay que agregar si hay o no colision
+        if (this.quadtree.collide(tb.blobs[i])) {
           let j = i;
           while (j >= 0) {
             tb.blobs[j].time -= tb.delay;
@@ -274,7 +274,7 @@ class Scene {
         this.objects.push(tb);
         return true;
       }
-      return false; //Devuelve si la cantidad de objetos excede la capacidad de la escena
+      return false; 
     }
 	return false;
   }
@@ -282,6 +282,9 @@ class Scene {
   sortScene() {
 
     this.objects.sort(function(a, b) {
+      return (-b.blobs[b.blobs.length - 1].time + +a.blobs[a.blobs.length - 1].time);
+    });
+	this.persons.sort(function(a, b) {
       return (-b.blobs[b.blobs.length - 1].time + +a.blobs[a.blobs.length - 1].time);
     });
   }
@@ -292,9 +295,9 @@ class Scene {
 
   getSceneTime() { //Devuelve la duracion maxima de la escena
     this.sortScene();
-    let tbMax = this.objects[this.objects.length - 1];
-    console.log("tiempo de escena: " + tbMax.getMaxTime())
-    return tbMax.getMaxTime();
+    let timeMax = Math.max(this.objects[this.objects.length - 1].getMaxTime(), this.persons[this.persons.length-1].getMaxTime());
+    console.log("tiempo de escena: " + timeMax);
+    return timeMax;
   }
 
 }

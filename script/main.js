@@ -7,10 +7,11 @@ var t0 = performance.now();
 let tuplas;
 
 var dataset = 'script/assets/dataset_small.json';
+
 $.getJSON(dataset)
   .done(function(response) { //Se escribe el codigo aca adentro, utilizando response object como el contenedor, ya que getJSON es asincronico y no se puede pasar el objeto afuera del json
     let data = response.data;
-
+	//.async=false;
     //Ordenar los blobs en orden ascendente
     function sortBlobs() {
       let blob;
@@ -119,4 +120,7 @@ $.getJSON(dataset)
     var t1 = performance.now();
     console.log(t1 - t0);
 	
-  });
+  })
+  
+  ;
+
