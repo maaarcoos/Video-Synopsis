@@ -98,10 +98,14 @@ class Quadtree {
   }
 
   retrieve() {
-    while (this.objects.length != 0) {
-      let obj = this.objects.pop();
-      if (this.child0.insert(obj)) {} else if (this.child1.insert(obj)) {} else if (this.child2.insert(obj)) {} else if (this.child3.insert(obj)) {}
-    }
+	if(this.splited){
+		while (this.objects.length != 0) {
+			let obj = this.objects.pop();
+			if (this.child0.insert(obj)) {} else if (this.child1.insert(obj)) {} else if (this.child2.insert(obj)) {} else if (this.child3.insert(obj)) {}
+		}
+		return true;
+	}
+	return false;
   }
 
   collide(obj) {
