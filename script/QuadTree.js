@@ -5,9 +5,7 @@ class TrackedBlob {
     this.id = id;
     this.alias = alias;
   }
-  getTimeDelayed(i) {
-    return this.blobs[i].time + this.delay;
-  }
+
 
   getMaxTime() {
     return this.blobs[this.blobs.length - 1].time;
