@@ -11,8 +11,12 @@ var dataset = 'script/assets/dataset_small.json';
 $.getJSON(dataset)
   .done(function(response) { //Se escribe el codigo aca adentro, utilizando response object como el contenedor, ya que getJSON es asincronico y no se puede pasar el objeto afuera del json
     let data = response.data;
-	//.async=false;
-    //Ordenar los blobs en orden ascendente
+	var resolution = data[0].lightweight_spritesheets[0].resolution;
+	var res = resolution.split("x",2);
+    var width = res[0];
+    var heigth = res[1];
+	var cantBlobs=0;
+	
     function sortBlobs() {
       let blob;
       for (let i = 0; i < data.length; i++) {
@@ -20,6 +24,9 @@ $.getJSON(dataset)
         blob.sort(function(a, b) { //ordena los blobs de cada tracked blob ascendentemente segun la funcion de comparacion
           return -new Date(b.time) + +new Date(a.time);
         });
+		for(let j=0; j<data[i].lightweight_blobs.length; j++){//obtiene cantidad de blobs
+			cantBlobs = cantBlobs + 1;
+		}
       }
       data.sort(function(a, b) { //ordena todos los tracked blobs segun el momento que ingresan a la escena
         return -new Date(b.init) + +new Date(a.init);
@@ -55,20 +62,22 @@ $.getJSON(dataset)
       return blobs;
     }
 
-	var resolution = data[0].lightweight_spritesheets[0].resolution;
-	console.log(resolution);
-	var res = resolution.split("x",2);
-	console.log(res);
-	console.log(res[0]);
-	console.log(res[1]);
-    var width = res[0];
-    var heigth = res[1];
+	console.log(cantBlobs);
+	
+	console.log(Math.ceil((800*480)/cantBlobs));
 
+	var objMax;
+	var persMax;
+	function calculatorLimit(){
+		objMax=Math.ceil((800*480)/cantBlobs);
+		persMax=Math.ceil(objMax / 2);
+	}
+	
 
-
+	
     function loadScenes() {
-      let objMax = 48;
-      let persMax = 24;
+		calculatorLimit();
+			console.log(Math.ceil(objMax / 2));
       let timeInit = 0;
       let sceneList = new Array(); //Arreglo que contiene todas las escenas
       let scene;
