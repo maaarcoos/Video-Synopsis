@@ -5,23 +5,16 @@ class TrackedBlob {
     this.id = id;
     this.alias = alias;
   }
-  sortTBlob() {
-    this.blobs.sort(function(a, b) {
-      return -b.time + +a.time;
-    });
-  }
   getTimeDelayed(i) {
     return this.blobs[i].time + this.delay;
   }
 
   getMaxTime() {
-    this.sortTBlob();
     return this.blobs[this.blobs.length - 1].time;
   }
 
   setDelay(lag) {
     this.delay = this.delay + lag;
-
   }
 }
 
@@ -33,7 +26,6 @@ class Tuple {
     this.time = time;
     this.collision = false;
   }
-
   setTime(delay) {
     this.time = this.time + delay;
   }
@@ -42,7 +34,6 @@ class Tuple {
       this.time - margin <= obj.time && this.time > obj.time ||
       this.time <= obj.time && this.time + margin > obj.time);
   }
-
   overlap(obj) { //se fija si se solapan al menos en un cuarto de cada uno
     return ((obj.blob.x + (obj.blob.width) / 4 <= this.blob.x + this.blob.width) &&
       (obj.blob.y + (obj.blob.heigth) / 4 <= this.blob.y + this.blob.heigth) &&
@@ -116,10 +107,8 @@ class Quadtree {
   collide(obj) {
     if (!this.bounds.contains(obj)) {
       return false;
-      //console.log("holi");
     } else
     if (this.objects.length < this.maxObjects && !this.splited) {
-      //console.log("holi");
       for (let i = 0; i < this.objects.length; i++) {
         if (obj.blob.id != this.objects[i].blob.id && obj.overlap(this.objects[i]) &&
           obj.similarTime(this.objects[i], 100)) {
@@ -130,7 +119,6 @@ class Quadtree {
       return false;
     } else if (this.splited) {
       if (this.child0.collide(obj)) {
-        //console.log("holi");
         return true;
       } else
       if (this.child1.collide(obj)) {
@@ -151,7 +139,6 @@ class Quadtree {
       return false;
     } else {
       if (this.objects.length < this.maxObjects && !this.splited) { //Si la cantidad de objetos no excede la cantidad maxima permitida de objetos, inserta y ademas si aun no esta dividido
-
         this.objects.push(obj);
         return true;
       } else {
@@ -182,7 +169,7 @@ class Quadtree {
 		for(let i=0;i<this.objects.length;i++){
 		  this.objects.splice(i,1);
 		}
-		//this.objects=[];
+		this.objects=[];
 	  }
 	  else{
 		  this.child0.clear();
@@ -293,7 +280,7 @@ class Scene {
     return this.quadtree.getMaxObjects();
   }
 
-  getSceneTime() { //Devuelve la duracion maxima de la escena
+  getSceneTime() {
 	if(this.objects.length != 0 || this.persons.length !=0){
 		this.sortScene();
 		let timeMax = Math.max(this.objects[this.objects.length - 1].getMaxTime(), this.persons[this.persons.length-1].getMaxTime());
