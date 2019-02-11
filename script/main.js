@@ -55,19 +55,23 @@ $.getJSON(dataset)
       return blobs;
     }
 
-
-    var width = 800;
-    var heigth = 400;
+	var resolution = data[0].lightweight_spritesheets[0].resolution;
+	console.log(resolution);
+	var res = resolution.split("x",2);
+	console.log(res);
+	console.log(res[0]);
+	console.log(res[1]);
+    var width = res[0];
+    var heigth = res[1];
 
 
 
     function loadScenes() {
-      let objMax = 32;
-      let persMax = 8;
+      let objMax = 48;
+      let persMax = 24;
       let timeInit = 0;
       let sceneList = new Array(); //Arreglo que contiene todas las escenas
       let scene;
-      //console.log(data);
 
       for (let i = 0; i < data.length; i++) {
         let aliasShape = data[i].data.shape[0];
