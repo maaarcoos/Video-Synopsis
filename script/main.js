@@ -6,7 +6,7 @@ var t0 = performance.now();
 
 let tuplas;
 
-var dataset = 'script/assets/dataset_small.json';
+var dataset = 'script/assets/dataset_full.json';
 
 $.getJSON(dataset)
   .done(function(response) { //Se escribe el codigo aca adentro, utilizando response object como el contenedor, ya que getJSON es asincronico y no se puede pasar el objeto afuera del json
@@ -109,7 +109,8 @@ $.getJSON(dataset)
       return sceneList;
     }
 
-    let otraprueba = loadScenes();
+    let otraprueba = new Array();
+otraprueba=	loadScenes();
     console.log(otraprueba);
     for (let i = 0; i < otraprueba.length; i++) {
       let cantObj = 0;
@@ -132,7 +133,26 @@ $.getJSON(dataset)
     }
     var t1 = performance.now();
     console.log(t1 - t0);
-	
+/*
+	const result = new Array();
+	for(let i=0; otraprueba.length; i++){
+		for(let j=0; otraprueba[i].objects.length; j++){
+			result.push(new TrackedBlob(otraprueba[i].objects[j]));
+		}
+		for(let t=0; otraprueba[i].persons.length; t++){
+			result.push(new TrackedBlob(otraprueba[i].persons[t]));
+		}
+	}*/
+	//console.log(result);
+
+	/*
+		var csvContent= "data:text/csv;charset=utf-8,";
+	otraprueba.forEach(function(rowArray){
+		var row = rowArray.join();
+		csvContent += row + "\r\n";
+	}
+	);
+	*/
   })
   
   ;

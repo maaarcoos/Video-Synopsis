@@ -283,13 +283,18 @@ class Scene {
   }
 
   getSceneTime() {
-	if(this.objects.length != 0 || this.persons.length !=0){
-		this.sortScene();
-		let timeMax = Math.max(this.objects[this.objects.length - 1].getMaxTime(), this.persons[this.persons.length-1].getMaxTime());
-		console.log("tiempo de escena: " + timeMax);
-		return timeMax;
-	}
-	return 0;
+	this.sortScene();
+	let timeMax=0;
+	if(this.objects.length != 0 && this.persons.length !=0){
+		timeMax = Math.max(this.objects[this.objects.length - 1].getMaxTime(), this.persons[this.persons.length-1].getMaxTime());}
+		else
+			if(this.objects.length != 0){
+				timeMax =this.objects[this.objects.length - 1].getMaxTime();}
+			else
+				timeMax = this.persons[this.persons.length-1].getMaxTime();
+
+	console.log("tiempo de escena: " + timeMax);
+	return timeMax;
   }
 
 }
