@@ -6,7 +6,7 @@ var t0 = performance.now();
 
 let tuplas;
 
-var dataset = 'script/assets/dataset_small.json';
+var dataset = 'script/assets/dataset_full.json';
 
 $.getJSON(dataset)
   .done(function(response) { //Se escribe el codigo aca adentro, utilizando response object como el contenedor, ya que getJSON es asincronico y no se puede pasar el objeto afuera del json
@@ -25,7 +25,8 @@ $.getJSON(dataset)
           return -new Date(b.time) + +new Date(a.time);
         });
         for (let j = 0; j < data[i].lightweight_blobs.length; j++) { //obtiene cantidad de blobs
-          cantBlobs = cantBlobs + 1;
+          if (j % 2){
+		  cantBlobs = cantBlobs + 1;}
         }
       }
       data.sort(function(a, b) { //ordena todos los tracked blobs segun el momento que ingresan a la escena
@@ -65,13 +66,13 @@ $.getJSON(dataset)
 
     console.log(cantBlobs);
 
-    console.log(Math.ceil((800 * 480) / (cantBlobs/4)));
+    console.log(Math.ceil((width * heigth) / (cantBlobs)));
 
     var objMax;
     var persMax;
 
     function calculatorLimit() {
-      objMax = Math.ceil((800 * 480) / (cantBlobs/4));
+      objMax = Math.ceil((width * heigth) / (cantBlobs));
       persMax = Math.ceil(objMax / 2);
     }
 
