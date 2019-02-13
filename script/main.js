@@ -41,7 +41,7 @@ $.getJSON(dataset)
       let blobs = new Array();
       let i;
       for (i = 0; i < data[tblob].lightweight_blobs.length; i++) {
-        if (i % 2) { //Solo agrega blobs pares
+        if (i % 2 || i == data[tblob].lightweight_blobs.length-1) { //Solo agrega blobs pares
           let objCenter = data[tblob].lightweight_blobs[i]['centroid'];
           //console.log(objCenter + " " +i);
           let cornerCoord = JSON.parse(objCenter); //necesito convertir el json a un objeto de Javascript
@@ -64,9 +64,9 @@ $.getJSON(dataset)
       return blobs;
     }
 
-    console.log(cantBlobs);
+    //console.log(cantBlobs);
 
-    console.log(Math.ceil((width * heigth) / (cantBlobs)));
+    //console.log(Math.ceil((width * heigth) / (cantBlobs)));
 
     var objMax;
     var persMax;
@@ -80,7 +80,7 @@ $.getJSON(dataset)
 
     function loadScenes() {
       calculatorLimit();
-      console.log(Math.ceil(objMax / 2));
+      //console.log(Math.ceil(objMax / 2));
       let timeInit = 0;
       let sceneList = new Array(); //Arreglo que contiene todas las escenas
       let scene;
@@ -118,18 +118,18 @@ $.getJSON(dataset)
     for (let i = 0; i < otraprueba.length; i++) {
       let cantObj = 0;
       let cantPers = 0;
-      console.log("holis");
+      //console.log("holis");
       console.log(otraprueba[i].getMaxObjectQuad());
-      console.log(otraprueba[i].objects.length);
-      console.log(otraprueba[i].persons.length);
+      //console.log(otraprueba[i].objects.length);
+      //console.log(otraprueba[i].persons.length);
       for (let j = 0; j < otraprueba[i].objects.length; j++) {
         cantObj = otraprueba[i].objects[j].blobs.length;
       }
       for (let t = 0; t < otraprueba[i].persons.length; t++) {
         cantPers = otraprueba[i].persons[t].blobs.length;
       }
-      console.log(cantObj);
-      console.log(cantPers);
+      //console.log(cantObj);
+      //console.log(cantPers);
 
 
       //console.log(otraprueba[i].quadtree.objects.length);
