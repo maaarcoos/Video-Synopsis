@@ -6,7 +6,7 @@ var t0 = performance.now();
 
 let tuplas;
 
-var dataset = 'script/assets/dataset_full.json';
+var dataset = 'script/assets/dataset_small.json';
 
 
 $.getJSON(dataset)
@@ -77,7 +77,9 @@ $.getJSON(dataset)
       persMax = Math.ceil(objMax / 2);
     }
 
-var arrayRes = [];
+	var arrayData = [];
+	
+	var arrayRes = [];
 
     function loadScenes() {
       calculatorLimit();
@@ -88,6 +90,9 @@ var arrayRes = [];
       for (let i = 0; i < data.length; i++) {
         let aliasShape = data[i].data.shape[0];
 		var arrayRow = [];
+		var arrayTBData = [];
+		arrayTBData.push(data[i].lightweight_blobs[0].tracked_blob_id, new Date(data[i].lightweight_blobs[0].time).getTime() - new Date(data[0].lightweight_blobs[0].time).getTime(), new Date(data[i].lightweight_blobs[data[i].lightweight_blobs.length - 1].time).getTime() - new Date(data[0].lightweight_blobs[0].time).getTime());
+		arrayData.push(arrayTBData);
         tuplas = loadBlobs(i);
         let tracked_blob_id = data[i].lightweight_blobs[0].tracked_blob_id;
         tblob = new TrackedBlob(tuplas, tracked_blob_id, aliasShape); //ahora al tb solo se le manda el arreglo de tuplas y por defecto el delay va a ser siempre 0
@@ -115,6 +120,7 @@ var arrayRes = [];
 			}
         }
 		arrayRes.push(arrayRow);
+		//console.log(arrayRow);
     }
     return sceneList;
  }
@@ -125,36 +131,28 @@ var arrayRes = [];
     for (let i = 0; i < otraprueba.length; i++) {
       let cantObj = 0;
       let cantPers = 0;
-      //console.log("holis");
       console.log(otraprueba[i].getMaxObjectQuad());
-      //console.log(otraprueba[i].objects.length);
-      //console.log(otraprueba[i].persons.length);
       for (let j = 0; j < otraprueba[i].objects.length; j++) {
         cantObj = otraprueba[i].objects[j].blobs.length;
       }
       for (let t = 0; t < otraprueba[i].persons.length; t++) {
         cantPers = otraprueba[i].persons[t].blobs.length;
       }
-      //console.log(cantObj);
-      //console.log(cantPers);
-
-
-      //console.log(otraprueba[i].quadtree.objects.length);
     }
     var t1 = performance.now();
     console.log(t1 - t0);
 	
 	
 	function download_csv() {
-    var csv = dataset + '\n';
-	csv += 'id,time Inic, time final\n';
-    arrayRes.forEach(function(row) {
+		var csv = dataset + '\n';
+		csv += 'id,time Inic, time final\n';
+		arrayData.forEach(function(row) {
             csv += row.join(',');
             csv += "\n";
-    });
+		});
  
-	//alert(csv);
-    return csv;
+		//alert(csv);
+		return csv;
 	}
 	console.log(download_csv());
 	//document.getElementById('resultado').innerHTML = download_csv();
