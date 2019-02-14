@@ -8,6 +8,7 @@ let tuplas;
 
 var dataset = 'script/assets/dataset_full.json';
 
+
 $.getJSON(dataset)
   .done(function(response) { //Se escribe el codigo aca adentro, utilizando response object como el contenedor, ya que getJSON es asincronico y no se puede pasar el objeto afuera del json
     let data = response.data;
@@ -76,41 +77,47 @@ $.getJSON(dataset)
       persMax = Math.ceil(objMax / 2);
     }
 
-
+var arrayRes = [];
 
     function loadScenes() {
       calculatorLimit();
-      //console.log(Math.ceil(objMax / 2));
       let timeInit = 0;
       let sceneList = new Array(); //Arreglo que contiene todas las escenas
       let scene;
 
       for (let i = 0; i < data.length; i++) {
         let aliasShape = data[i].data.shape[0];
-
+		var arrayRow = [];
         tuplas = loadBlobs(i);
-
         let tracked_blob_id = data[i].lightweight_blobs[0].tracked_blob_id;
         tblob = new TrackedBlob(tuplas, tracked_blob_id, aliasShape); //ahora al tb solo se le manda el arreglo de tuplas y por defecto el delay va a ser siempre 0
-        //console.log(tblob);
         if (sceneList.length == 0) {
-          scene = new Scene(objMax, persMax, width, heigth, timeInit); //dentro de scene, le va a setear al nuevo tb el delay correspondiente al timeInit de la escena
-          scene.insert(tblob);
-          sceneList.push(scene);
+			scene = new Scene(objMax, persMax, width, heigth, timeInit); //dentro de scene, le va a setear al nuevo tb el delay correspondiente al timeInit de la escena
+			scene.insert(tblob);
+			arrayRow.push(tblob.id);
+			arrayRow.push(tblob.getInicTime());
+			arrayRow.push(tblob.getMaxTime());
+			sceneList.push(scene);
         } else {
           if (sceneList[sceneList.length - 1].insert(tblob)) {
-            //nada
+				arrayRow.push(tblob.id);
+				arrayRow.push(tblob.getInicTime());
+				arrayRow.push(tblob.getMaxTime());
           } else {
-            timeInit = sceneList[sceneList.length - 1].getSceneTime();
-            scene = new Scene(objMax, persMax, width, heigth, timeInit);
+				timeInit = sceneList[sceneList.length - 1].getSceneTime();
+				scene = new Scene(objMax, persMax, width, heigth, timeInit);
 
-            scene.insert(tblob);
-            sceneList.push(scene);
-          }
+				scene.insert(tblob);
+				arrayRow.push(tblob.id);
+				arrayRow.push(tblob.getInicTime());
+				arrayRow.push(tblob.getMaxTime());
+				sceneList.push(scene);
+			}
         }
-      }
-      return sceneList;
+		arrayRes.push(arrayRow);
     }
+    return sceneList;
+ }
 
     let otraprueba = new Array();
     otraprueba = loadScenes();
@@ -136,26 +143,26 @@ $.getJSON(dataset)
     }
     var t1 = performance.now();
     console.log(t1 - t0);
-    /*
-    	const result = new Array();
-    	for(let i=0; otraprueba.length; i++){
-    		for(let j=0; otraprueba[i].objects.length; j++){
-    			result.push(new TrackedBlob(otraprueba[i].objects[j]));
-    		}
-    		for(let t=0; otraprueba[i].persons.length; t++){
-    			result.push(new TrackedBlob(otraprueba[i].persons[t]));
-    		}
-    	}*/
-    //console.log(result);
-
-    /*
-    	var csvContent= "data:text/csv;charset=utf-8,";
-    otraprueba.forEach(function(rowArray){
-    	var row = rowArray.join();
-    	csvContent += row + "\r\n";
-    }
-    );
-    */
+	
+	
+	function download_csv() {
+    var csv = dataset + '\n';
+	csv += 'id,time Inic, time final\n';
+    arrayRes.forEach(function(row) {
+            csv += row.join(',');
+            csv += "\n";
+    });
+ 
+	//alert(csv);
+    return csv;
+	}
+	console.log(download_csv());
+	//document.getElementById('resultado').innerHTML = download_csv();
+	
+	//var boton= '<button onclick="download_csv()">Export HTML Table To CSV File</button>';
+	
+	//$('form').append(boton);
+	
   })
 
 ;

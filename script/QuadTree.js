@@ -6,6 +6,9 @@ class TrackedBlob {
     this.alias = alias;
   }
 
+  getInicTime(){
+	  return this.blobs[0].time;
+  }
 
   getMaxTime() {
     return this.blobs[this.blobs.length - 1].time;
@@ -222,7 +225,7 @@ class Scene {
     this.objMax = objMax;
     this.personsMax = personsMax
     this.bounds = new Rectangle(0, 0, widthMax, hightMax);
-    this.quadtree = new Quadtree(this.bounds, objMax / 4);
+    this.quadtree = new Quadtree(this.bounds, Math.ceil(objMax / 4));
     this.timeInit = timeInit;
     this.timeLimit;
     this.objects = new Array(); //arreglo de tracked blobs
