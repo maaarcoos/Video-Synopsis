@@ -127,8 +127,6 @@ var arrayRes = [];
       let cantPers = 0;
       //console.log("holis");
       console.log(otraprueba[i].getMaxObjectQuad());
-      //console.log(otraprueba[i].objects.length);
-      //console.log(otraprueba[i].persons.length);
       for (let j = 0; j < otraprueba[i].objects.length; j++) {
         cantObj = otraprueba[i].objects[j].blobs.length;
       }
@@ -143,8 +141,8 @@ var arrayRes = [];
     }
     var t1 = performance.now();
     console.log(t1 - t0);
-	
-	
+
+
 	function download_csv() {
     var csv = dataset + '\n';
 	csv += 'id,time Inic, time final\n';
@@ -152,17 +150,20 @@ var arrayRes = [];
             csv += row.join(',');
             csv += "\n";
     });
- 
-	//alert(csv);
-    return csv;
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += csv;
+
+
+    return csvContent;
 	}
-	console.log(download_csv());
-	//document.getElementById('resultado').innerHTML = download_csv();
-	
-	//var boton= '<button onclick="download_csv()">Export HTML Table To CSV File</button>';
-	
-	//$('form').append(boton);
-	
+  let encodedUri = encodeURI(download_csv());
+  link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', 'export.csv');
+        link.click();
+  window.open(encodedUri);
+
+
   })
 
 ;
