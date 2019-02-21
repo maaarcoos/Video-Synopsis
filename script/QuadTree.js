@@ -5,23 +5,18 @@ class TrackedBlob {
     this.id = id;
     this.alias = alias;
   }
-
-  getInicTime(){
-	  return this.blobs[0].time;
+  getInicTime() {
+    return this.blobs[0].time;
   }
-
   getMaxTime() {
     return this.blobs[this.blobs.length - 1].time;
   }
-
   setDelay(lag) {
     this.delay = this.delay + lag;
   }
 }
 
-
 class Tuple {
-
   constructor(blob, time) { //time  - blob contiene el blob en cuestion
     this.blob = blob;
     this.time = time;
@@ -34,23 +29,14 @@ class Tuple {
     return (this.time == obj.time ||
       this.time - margin <= obj.time && this.time > obj.time ||
       this.time <= obj.time && this.time + margin > obj.time);
-  }/*
-  overlap(obj) { //se fija si se solapan al menos en un cuarto de cada uno
-    return ((obj.blob.x + (obj.blob.width) <= this.blob.x + this.blob.width) &&
-      (obj.blob.y + (obj.blob.heigth) <= this.blob.y + this.blob.heigth) &&
-      (obj.blob.x + (obj.blob.width) >= this.blob.x - this.blob.width) &&
-      (obj.blob.y + (obj.blob.heigth) >= this.blob.y - this.blob.heigth));
-  }*/
-  
+  }
   overlap(obj) { //se fija si se solapan al menos en un cuarto de cada uno
     return ((obj.blob.x <= this.blob.x + this.blob.width) ||
       (obj.blob.y <= this.blob.y + this.blob.heigth) ||
       (obj.blob.x + (obj.blob.width) >= this.blob.x) ||
       (obj.blob.y + (obj.blob.heigth) >= this.blob.y));
   }
-
 }
-
 
 class Rectangle { //el primero se inicializara con (0,0,800,400)
   constructor(x, y, w, h) { //Javascript soporta parametros faltantes en el llamado
@@ -59,7 +45,6 @@ class Rectangle { //el primero se inicializara con (0,0,800,400)
     this.width = w;
     this.heigth = h;
   }
-
   contains(obj) { //contiene al menos la mitad del objeto en cuestion
     return ((obj.blob.x + (obj.blob.width) / 2 <= this.x + this.width) &&
       (obj.blob.y + (obj.blob.heigth) / 2 <= this.y + this.heigth) &&
@@ -69,7 +54,6 @@ class Rectangle { //el primero se inicializara con (0,0,800,400)
 }
 
 class Frame {
-
   constructor(x, y, w, h, id, time, resWidth, resHeigth) {
     this.x = (resWidth * x) / 100;
     this.y = (resHeigth * y) / 100;
@@ -78,7 +62,6 @@ class Frame {
     this.id = id;
     this.time = time;
   }
-
 }
 
 class Quadtree {
@@ -93,7 +76,6 @@ class Quadtree {
     let subheigth = this.bounds.heigth / 2;
     let x = this.bounds.x;
     let y = this.bounds.y;
-
     this.child0 =
       new Quadtree(new Rectangle(x, y, subWidth, subheigth), this.maxObjects); //hijo0
     this.child1 =
@@ -104,20 +86,16 @@ class Quadtree {
       new Quadtree(new Rectangle(x + subWidth, y + subheigth, subWidth, subheigth), this.maxObjects); //hijo3
     this.splited = true;
   }
-
   retrieve() {
-	if(this.splited){
-		while (this.objects.length != 0) {
-			let obj = this.objects.pop();
-			if (this.child0.insert(obj)) {} else if (this.child1.insert(obj)) {} else if (this.child2.insert(obj)) {} else if (this.child3.insert(obj)) {}
-		}
-		return true;
-	}
-	return false;
+    if (this.splited) {
+      while (this.objects.length != 0) {
+        let obj = this.objects.pop();
+        if (this.child0.insert(obj)) {} else if (this.child1.insert(obj)) {} else if (this.child2.insert(obj)) {} else if (this.child3.insert(obj)) {}
+      }
+      return true;
+    }
+    return false;
   }
-
-  
-  
   collide(obj) {
     if (!this.bounds.contains(obj)) {
       return false;
@@ -125,7 +103,7 @@ class Quadtree {
     if (this.objects.length < this.maxObjects && !this.splited) {
       for (let i = 0; i < this.objects.length; i++) {
         if (obj.blob.id != this.objects[i].blob.id && obj.overlap(this.objects[i]) &&
-          obj.similarTime(this.objects[i], 1000)) {
+          obj.similarTime(this.objects[i], 1500)) {
           obj.collision = true;
           return true;
         }
@@ -147,7 +125,6 @@ class Quadtree {
 
     } else return false;
   }
-
   insert(obj) {
     if (!this.bounds.contains(obj)) { //Si no lo puede contener al objeto por lo limites, retorna false
       return false;
@@ -156,7 +133,6 @@ class Quadtree {
         this.objects.push(obj);
         return true;
       } else {
-
         if (!this.splited) { //Si no esta dividido, lo divide
           this.split();
           this.retrieve();
@@ -177,22 +153,19 @@ class Quadtree {
       }
     }
   }
-  
-    clear(){
-	  if(! this.splited){
-		for(let i=0;i<this.objects.length;i++){
-		  this.objects.splice(i,1);
-		}
-		this.objects=[];
-	  }
-	  else{
-		  this.child0.clear();
-			this.child1.clear();
-			this.child2.clear();
-			this.child3.clear();
-	}
+  clear() {
+    if (!this.splited) {
+      for (let i = 0; i < this.objects.length; i++) {
+        this.objects.splice(i, 1);
+      }
+      this.objects = [];
+    } else {
+      this.child0.clear();
+      this.child1.clear();
+      this.child2.clear();
+      this.child3.clear();
+    }
   }
-
   drop(obj) {
     if (!this.bounds.contains(obj)) { //Si no lo podria contener, no se fija de sacarlo
       return false;
@@ -217,17 +190,13 @@ class Quadtree {
       return true;
     }
   }
-
   getMaxObjects() {
     if (this.splited) {
       return this.child0.getMaxObjects() + this.child1.getMaxObjects() + this.child2.getMaxObjects() + this.child3.getMaxObjects();
     } else
       return this.objects.length;
   }
-
 }
-
-
 
 class Scene {
   constructor(objMax, personsMax, widthMax, hightMax, timeInit) {
@@ -241,10 +210,9 @@ class Scene {
     this.persons = new Array(); //arreglo donde se guardan tracked blobs que fueron detectados
     // con el alias "human"
   }
-
   insert(tb) {
     if (this.objects.length < this.objMax || this.persons.length < this.persMax) {
-      tb.setDelay(this.timeInit); 
+      tb.setDelay(this.timeInit);
       let i = 0;
       while (i < tb.blobs.length) {
         tb.blobs[i].time += tb.delay;
@@ -260,53 +228,44 @@ class Scene {
           i++;
         }
       }
-
       if (!(tb.alias == undefined) && this.persons.length < this.personsMax && tb.alias.accuracy >= 60 && (tb.alias.alias == "human" || tb.alias.alias == "cyclist")) {
         for (let j = 0; j < tb.blobs.length; j++) {
           this.quadtree.insert(tb.blobs[j]);
         }
         this.persons.push(tb);
         return true;
-      } else if ((tb.alias == undefined) && (this.objects.length < this.objMax) || (this.objects.length < this.objMax) || !(this.persons.length < this.persMax) ) {
-
+      } else if ((tb.alias == undefined) && (this.objects.length < this.objMax) || (this.objects.length < this.objMax) || !(this.persons.length < this.persMax)) {
         for (let j = 0; j < tb.blobs.length; j++) {
           this.quadtree.insert(tb.blobs[j]);
         }
         this.objects.push(tb);
         return true;
       }
-      return false; 
+      return false;
     }
-	return false;
+    return false;
   }
-
   sortScene() {
-
     this.objects.sort(function(a, b) {
       return (-b.blobs[b.blobs.length - 1].time + +a.blobs[a.blobs.length - 1].time);
     });
-	this.persons.sort(function(a, b) {
+    this.persons.sort(function(a, b) {
       return (-b.blobs[b.blobs.length - 1].time + +a.blobs[a.blobs.length - 1].time);
     });
   }
-
   getMaxObjectQuad() {
     return this.quadtree.getMaxObjects();
   }
-
   getSceneTime() {
-	this.sortScene();
-	let timeMax=0;
-	if(this.objects.length != 0 && this.persons.length !=0){
-		timeMax = Math.max(this.objects[this.objects.length - 1].getMaxTime(), this.persons[this.persons.length-1].getMaxTime());}
-		else
-			if(this.objects.length != 0){
-				timeMax =this.objects[this.objects.length - 1].getMaxTime();}
-			else
-				timeMax = this.persons[this.persons.length-1].getMaxTime();
-
-	console.log("tiempo de escena: " + timeMax);
-	return timeMax;
+    this.sortScene();
+    let timeMax = 0;
+    if (this.objects.length != 0 && this.persons.length != 0) {
+      timeMax = Math.max(this.objects[this.objects.length - 1].getMaxTime(), this.persons[this.persons.length - 1].getMaxTime());
+    } else
+    if (this.objects.length != 0) {
+      timeMax = this.objects[this.objects.length - 1].getMaxTime();
+    } else
+      timeMax = this.persons[this.persons.length - 1].getMaxTime();
+    return timeMax;
   }
-
 }
