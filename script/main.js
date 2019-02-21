@@ -159,7 +159,7 @@ var arrayRes = [];
   let encodedUri = encodeURI(download_csv());
   link = document.createElement('a');
         link.setAttribute('href', encodedUri);
-        link.setAttribute('download', 'export.csv');
+        link.setAttribute('download', 'Result.csv');
         link.click();
   window.open(encodedUri);
 

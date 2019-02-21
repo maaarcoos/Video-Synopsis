@@ -34,12 +34,19 @@ class Tuple {
     return (this.time == obj.time ||
       this.time - margin <= obj.time && this.time > obj.time ||
       this.time <= obj.time && this.time + margin > obj.time);
-  }
+  }/*
   overlap(obj) { //se fija si se solapan al menos en un cuarto de cada uno
-    return ((obj.blob.x + (obj.blob.width) / 4 <= this.blob.x + this.blob.width) &&
-      (obj.blob.y + (obj.blob.heigth) / 4 <= this.blob.y + this.blob.heigth) &&
-      (obj.blob.x + (obj.blob.width) / 4 >= this.blob.x - this.blob.width) &&
-      (obj.blob.y + (obj.blob.heigth) / 4 >= this.blob.y - this.blob.heigth));
+    return ((obj.blob.x + (obj.blob.width) <= this.blob.x + this.blob.width) &&
+      (obj.blob.y + (obj.blob.heigth) <= this.blob.y + this.blob.heigth) &&
+      (obj.blob.x + (obj.blob.width) >= this.blob.x - this.blob.width) &&
+      (obj.blob.y + (obj.blob.heigth) >= this.blob.y - this.blob.heigth));
+  }*/
+  
+  overlap(obj) { //se fija si se solapan al menos en un cuarto de cada uno
+    return ((obj.blob.x <= this.blob.x + this.blob.width) ||
+      (obj.blob.y <= this.blob.y + this.blob.heigth) ||
+      (obj.blob.x + (obj.blob.width) >= this.blob.x) ||
+      (obj.blob.y + (obj.blob.heigth) >= this.blob.y));
   }
 
 }
@@ -109,6 +116,8 @@ class Quadtree {
 	return false;
   }
 
+  
+  
   collide(obj) {
     if (!this.bounds.contains(obj)) {
       return false;
@@ -116,7 +125,7 @@ class Quadtree {
     if (this.objects.length < this.maxObjects && !this.splited) {
       for (let i = 0; i < this.objects.length; i++) {
         if (obj.blob.id != this.objects[i].blob.id && obj.overlap(this.objects[i]) &&
-          obj.similarTime(this.objects[i], 100)) {
+          obj.similarTime(this.objects[i], 1000)) {
           obj.collision = true;
           return true;
         }
