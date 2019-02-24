@@ -5,23 +5,23 @@ class TrackedBlob {//contenedor de cada tb
     this.id = id;
     this.alias = alias;
   }
-  getInicTime() {
-    return this.blobs[0].time;
+
+  getInicTime(){
+	  return this.blobs[0].time;
   }
-<<<<<<< HEAD
 
   getMaxTime() {//devuelve el tiempo maximo de su ultimo blob en escena
-=======
-  getMaxTime() {
->>>>>>> 1cd653e56fe456312af967eeed6b28f69364c6a9
     return this.blobs[this.blobs.length - 1].time;
   }
+
   setDelay(lag) {
     this.delay = this.delay + lag;
   }
 }
 
+
 class Tuple {
+
   constructor(blob, time) { //time  - blob contiene el blob en cuestion
     this.blob = blob;
     this.time = time;
@@ -35,17 +35,16 @@ class Tuple {
       this.time - margin <= obj.time && this.time > obj.time ||
       this.time <= obj.time && this.time + margin > obj.time);
   }
-<<<<<<< HEAD
   
-=======
->>>>>>> 1cd653e56fe456312af967eeed6b28f69364c6a9
   overlap(obj) { //se fija si se solapan al menos en un cuarto de cada uno
     return ((obj.blob.x <= this.blob.x + this.blob.width) ||
       (obj.blob.y <= this.blob.y + this.blob.heigth) ||
       (obj.blob.x + (obj.blob.width) >= this.blob.x) ||
       (obj.blob.y + (obj.blob.heigth) >= this.blob.y));
   }
+
 }
+
 
 class Rectangle { //el primero se inicializara con (0,0,800,400)
   constructor(x, y, w, h) { //Javascript soporta parametros faltantes en el llamado
@@ -54,6 +53,7 @@ class Rectangle { //el primero se inicializara con (0,0,800,400)
     this.width = w;
     this.heigth = h;
   }
+
   contains(obj) { //contiene al menos la mitad del objeto en cuestion
     return ((obj.blob.x + (obj.blob.width) / 2 <= this.x + this.width) &&
       (obj.blob.y + (obj.blob.heigth) / 2 <= this.y + this.heigth) &&
@@ -62,12 +62,8 @@ class Rectangle { //el primero se inicializara con (0,0,800,400)
   }
 }
 
-<<<<<<< HEAD
 class Frame {//clase contenedora de blob
 
-=======
-class Frame {
->>>>>>> 1cd653e56fe456312af967eeed6b28f69364c6a9
   constructor(x, y, w, h, id, time, resWidth, resHeigth) {
     this.x = (resWidth * x) / 100;
     this.y = (resHeigth * y) / 100;
@@ -76,6 +72,7 @@ class Frame {
     this.id = id;
     this.time = time;
   }
+
 }
 
 class Quadtree {
@@ -90,6 +87,7 @@ class Quadtree {
     let subheigth = this.bounds.heigth / 2;
     let x = this.bounds.x;
     let y = this.bounds.y;
+
     this.child0 =
       new Quadtree(new Rectangle(x, y, subWidth, subheigth), this.maxObjects); //hijo0
     this.child1 =
@@ -100,7 +98,6 @@ class Quadtree {
       new Quadtree(new Rectangle(x + subWidth, y + subheigth, subWidth, subheigth), this.maxObjects); //hijo3
     this.splited = true;
   }
-<<<<<<< HEAD
 
   retrieve() {//si esta divido, pasa sus objetos a sus regiones hijas
 	if(this.splited){
@@ -123,26 +120,6 @@ class Quadtree {
       for (let i = 0; i < this.objects.length; i++) {//recorre todos los blob que contiene
 	  //chequea que no tengan mismo id (que no pertenezcan al mismo TB, que no se solapen y que se encuentren en el mismo intervalo de tiempo)
         if (obj.blob.id != this.objects[i].blob.id && obj.overlap(this.objects[i]) && obj.similarTime(this.objects[i], 1000)) {
-=======
-  retrieve() {
-    if (this.splited) {
-      while (this.objects.length != 0) {
-        let obj = this.objects.pop();
-        if (this.child0.insert(obj)) {} else if (this.child1.insert(obj)) {} else if (this.child2.insert(obj)) {} else if (this.child3.insert(obj)) {}
-      }
-      return true;
-    }
-    return false;
-  }
-  collide(obj) {
-    if (!this.bounds.contains(obj)) {
-      return false;
-    } else
-    if (this.objects.length < this.maxObjects && !this.splited) {
-      for (let i = 0; i < this.objects.length; i++) {
-        if (obj.blob.id != this.objects[i].blob.id && obj.overlap(this.objects[i]) &&
-          obj.similarTime(this.objects[i], 1500)) {
->>>>>>> 1cd653e56fe456312af967eeed6b28f69364c6a9
           obj.collision = true;
           return true;
         }
@@ -164,6 +141,7 @@ class Quadtree {
 
     } else return false;
   }
+
   insert(obj) {
     if (!this.bounds.contains(obj)) { //Si no lo puede contener al objeto por lo limites, retorna false
       return false;
@@ -172,6 +150,7 @@ class Quadtree {
         this.objects.push(obj);
         return true;
       } else {
+
         if (!this.splited) { //Si no esta dividido, lo divide
           this.split();
           this.retrieve();
@@ -192,7 +171,6 @@ class Quadtree {
       }
     }
   }
-<<<<<<< HEAD
   
     clear(){//limpia el quadtree
 	  if(! this.splited){
@@ -210,22 +188,6 @@ class Quadtree {
   }
 
   drop(obj) {//elimina un objeto del quadtree
-=======
-  clear() {
-    if (!this.splited) {
-      for (let i = 0; i < this.objects.length; i++) {
-        this.objects.splice(i, 1);
-      }
-      this.objects = [];
-    } else {
-      this.child0.clear();
-      this.child1.clear();
-      this.child2.clear();
-      this.child3.clear();
-    }
-  }
-  drop(obj) {
->>>>>>> 1cd653e56fe456312af967eeed6b28f69364c6a9
     if (!this.bounds.contains(obj)) { //Si no lo podria contener, no se fija de sacarlo
       return false;
     } else
@@ -249,26 +211,19 @@ class Quadtree {
       return true;
     }
   }
-<<<<<<< HEAD
 
   getMaxObjects() {//obtiene la cantidad maxima de objetos del quadtree total
-=======
-  getMaxObjects() {
->>>>>>> 1cd653e56fe456312af967eeed6b28f69364c6a9
     if (this.splited) {
       return this.child0.getMaxObjects() + this.child1.getMaxObjects() + this.child2.getMaxObjects() + this.child3.getMaxObjects();
     } else
       return this.objects.length;
   }
+
 }
 
-<<<<<<< HEAD
 
 
 class Scene {//escena
-=======
-class Scene {
->>>>>>> 1cd653e56fe456312af967eeed6b28f69364c6a9
   constructor(objMax, personsMax, widthMax, hightMax, timeInit) {
     this.objMax = objMax;
     this.personsMax = personsMax
@@ -280,16 +235,10 @@ class Scene {
     this.persons = new Array(); //arreglo donde se guardan tracked blobs que fueron detectados
     // con el alias "human"
   }
-<<<<<<< HEAD
 
   insert(tb) {//inserta cada tb por escena
     if (this.objects.length < this.objMax || this.persons.length < this.persMax) {//si los limites no fueron excedidos, lo puede insertar
       tb.setDelay(this.timeInit); //setea el delay inicial del tb que corresponde al inicio de la escena
-=======
-  insert(tb) {
-    if (this.objects.length < this.objMax || this.persons.length < this.persMax) {
-      tb.setDelay(this.timeInit);
->>>>>>> 1cd653e56fe456312af967eeed6b28f69364c6a9
       let i = 0;
       while (i < tb.blobs.length) {//itera por todos los blobs del tb
         tb.blobs[i].time += tb.delay;//setea a cada blob el delay 
@@ -305,46 +254,37 @@ class Scene {
           i++;
         }
       }
-<<<<<<< HEAD
 	  
 	  //chequea si pertenece a la clasificacion de persona o de objeto, para insertarlo en un arreglo o en el otro
 
-=======
->>>>>>> 1cd653e56fe456312af967eeed6b28f69364c6a9
       if (!(tb.alias == undefined) && this.persons.length < this.personsMax && tb.alias.accuracy >= 60 && (tb.alias.alias == "human" || tb.alias.alias == "cyclist")) {
         for (let j = 0; j < tb.blobs.length; j++) {
           this.quadtree.insert(tb.blobs[j]);
         }
         this.persons.push(tb);
         return true;
-      } else if ((tb.alias == undefined) && (this.objects.length < this.objMax) || (this.objects.length < this.objMax) || !(this.persons.length < this.persMax)) {
+      } else if ((tb.alias == undefined) && (this.objects.length < this.objMax) || (this.objects.length < this.objMax) || !(this.persons.length < this.persMax) ) {
+
         for (let j = 0; j < tb.blobs.length; j++) {
           this.quadtree.insert(tb.blobs[j]);
         }
         this.objects.push(tb);
         return true;
       }
-      return false;
+      return false; 
     }
-<<<<<<< HEAD
 	return false;//si no tiene lugar para contenerlo, retorna false
   }
 
   sortScene() {//ordena los arreglos de objetos y de personas de la escena
 
-=======
-    return false;
-  }
-  sortScene() {
->>>>>>> 1cd653e56fe456312af967eeed6b28f69364c6a9
     this.objects.sort(function(a, b) {
       return (-b.blobs[b.blobs.length - 1].time + +a.blobs[a.blobs.length - 1].time);
     });
-    this.persons.sort(function(a, b) {
+	this.persons.sort(function(a, b) {
       return (-b.blobs[b.blobs.length - 1].time + +a.blobs[a.blobs.length - 1].time);
     });
   }
-<<<<<<< HEAD
 
   getMaxObjectQuad() {//retorna la maxima cantidad de objetos por escena
     return this.quadtree.getMaxObjects();
@@ -363,21 +303,6 @@ class Scene {
 
 	console.log("tiempo de escena: " + timeMax);
 	return timeMax;
-=======
-  getMaxObjectQuad() {
-    return this.quadtree.getMaxObjects();
   }
-  getSceneTime() {
-    this.sortScene();
-    let timeMax = 0;
-    if (this.objects.length != 0 && this.persons.length != 0) {
-      timeMax = Math.max(this.objects[this.objects.length - 1].getMaxTime(), this.persons[this.persons.length - 1].getMaxTime());
-    } else
-    if (this.objects.length != 0) {
-      timeMax = this.objects[this.objects.length - 1].getMaxTime();
-    } else
-      timeMax = this.persons[this.persons.length - 1].getMaxTime();
-    return timeMax;
->>>>>>> 1cd653e56fe456312af967eeed6b28f69364c6a9
-  }
+
 }
