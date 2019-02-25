@@ -6,7 +6,7 @@ var t0 = performance.now();
 
 let tuplas;
 
-var dataset = 'script/assets/dataset_full.json';
+var dataset = 'script/assets/dataset_small.json';
 
 
 $.getJSON(dataset)
