@@ -1,0 +1,115 @@
+getJSON('ruta del archivo');
+	done(function(response)){
+		Obtener datos de la resolucion del video;
+		sortBlob()
+		{
+			for(cada TrackedBlob del dataset)
+				Ordenar todos los Blob de cada TrackedBlob de forma ascendente segun el tiempo de entrada en el video;
+			Ordenar todos los TrackedBlob entre si de forma ascendente por el tiempo de entrada al video;
+		}
+		loadBlob(TrackedBlob)
+		{
+			inicializar arreglo de Blobs;
+			for(cada Blob del TrackedBlob)
+			{
+				if (posicion del Blob es par)
+					Obtener datos;
+				inicializar una instancia de la clase Tuple con el tiempo correspondiente al video resumen;
+				Guardar la instancia en Blobs;
+			}
+			return Blobs;
+		}
+		loadScenes()
+		{
+			inicializar arreglo de Scene;
+			for(cada TrackedBlob del dataset)
+			{
+				Obtener datos del TrackedBlob;
+				inicializar arreglo de Blobs del TrackedBlob;
+				arregloBlobs = loadBlob(TrackedBlob);
+				inicializar instancia de TrackedBlob con los datos obtenidos;
+				if (no hay objetos en sceneList)
+				{
+					inicializar una instancia de Scene con el tiempo seteado en 0;
+					insertar el TrackedBlob en la nueva escena;
+				}
+				else
+					if (la ultima escena en sceneList lo puede contener)
+						inserta el TrackedBlob en la ultima escena
+					else
+					{
+						inicializar una instancia de Scene / tiempo de escena = tiempo de salida del ultimo blob de la ultima escena;
+						insertar el TrackedBlob en la nueva escena;
+					}
+			}
+		}
+	}
+	
+insert(TrackedBlob){ //insert de Scene
+	if (los limites de la escena no fueron excedidos)
+	{
+		TrackedBlob.setearDelay(this.tiempoInicial);
+		for(cada Blob del TrackedBlob)
+		{
+			setea a cada blob el delay correspondiente del TrackedBlob;
+			if (Quadtree.collide(blob actual))
+			{
+				Recorre los blobs recorridos anteriormente y les setea el delay anterior;
+				Setea un nuevo delay al TrackedBlob;
+			}
+		}
+		Chequea su clasificacion para insertarlo en el arreglo de personas o otros objetos;
+		inserta en la instancia Quadtree;
+		return true;
+	}			
+	return false;	
+}
+
+insert(blob) //insert de Quadtree
+{
+	if(no lo puede contener)
+		return false;
+	else
+		if(cantidad maxima no fue excedida)
+		{
+			insert en arreglo de objetos;
+			return true;
+		}
+		else
+			if(!this.splited)
+			{
+				Se divide en cuatro Quadtree y reparte sus objetos entre ellos;
+			}
+			Chequea cual de sus divisiones pueden contener al blob;
+			Si alguno lo puede contener: return true;
+}
+
+collide(blob) //collide de Quadtree
+{
+	if(no lo puede contener)
+	{
+		return false;
+	}
+	else
+		if(cantidad maxima no fue excedida && !splited)
+		{
+			for(cada blob del arreglo de objetos)
+			{
+				Compara cada blob del arreglo con el blob pasado por parametro;
+				if(poseen distinto ID && no se solapan && comparten mismo intervalo de tiempo)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+		else
+			if(this.splited)
+			{
+				Chequea cual de sus divisiones pueden contener al blob;
+				Si alguno lo puede contener: return true;
+			}
+			return false;
+}
+
+
